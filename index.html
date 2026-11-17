@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ポーションログ</title>
+<meta name="theme-color" content="#a98bd6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ポーションログ">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7f8;--card:#fff;--ink:#5c4650;--sub:#a08a92;--line:#f5d9e1;--acc:#e98fab;--acc2:#f9e1e8;--acc-ink:#fff;--mint:#cfe8de;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a2125;--card:#352a2f;--ink:#f6e8ed;--sub:#b9a2ab;--line:#4d3b43;--acc:#ec9db5;--acc2:#4a3640;--acc-ink:#2a1a20;--mint:#3d5149}}
+:root[data-theme="dark"]{--bg:#2a2125;--card:#352a2f;--ink:#f6e8ed;--sub:#b9a2ab;--line:#4d3b43;--acc:#ec9db5;--acc2:#4a3640;--acc-ink:#2a1a20;--mint:#3d5149}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;font-weight:500;line-height:1.6}
+main{max-width:520px;margin:0 auto;padding:12px 16px 40px}
+header{text-align:center;padding:10px 0 6px}
+header svg{display:block;margin:0 auto 2px}
+h1{font-size:30px;margin:0;color:var(--acc);letter-spacing:.06em}
+h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
+.sub{color:var(--sub);font-size:13px;margin:2px 0 0}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px;margin-bottom:16px}
+label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
+input,textarea,button{font:inherit;color:inherit}
+input[type=date],input[type=time],input[type=text],textarea{width:100%;padding:11px;border:2px solid var(--line);border-radius:14px;background:var(--bg)}
+input[type=date],input[type=time]{display:block;min-width:0;max-width:100%;min-height:46px;-webkit-appearance:none;appearance:none;text-align:left}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pills button{flex:1;padding:9px 0;border-radius:999px;border:2px solid var(--line);background:var(--bg);font-weight:700}
+.pills button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn{width:100%;padding:14px;border:0;border-radius:999px;background:var(--acc);color:var(--acc-ink);font-weight:700;margin-top:14px;font-size:16px}
+.pick{display:block;text-align:center;padding:14px;border:2px dashed var(--acc);border-radius:18px;cursor:pointer;color:var(--acc);font-weight:700}
+#prev{display:none;position:sticky;top:8px;z-index:5;width:46%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;margin:10px auto 0;border:3px solid var(--card);box-shadow:0 2px 10px rgba(0,0,0,.2);cursor:zoom-in}
+#prev.big{width:100%;aspect-ratio:auto;max-height:70vh;object-fit:contain;background:var(--card);cursor:zoom-out}
+#chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 13px;font-size:14px}
+#fmtPrev{margin:6px 0 0;color:var(--acc);font-size:13px;font-weight:700;min-height:1.2em}
+#bkStatus{white-space:pre-line}
+.item{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:2px solid var(--line)}
+.item:first-child{border-top:0}
+.item img{width:72px;height:72px;object-fit:cover;border-radius:16px;flex:none}
+.item .noimg{width:72px;height:72px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;border:2px dashed var(--line);color:var(--sub);font-size:12px;text-align:center}
+.item b{display:block}.item span{color:var(--sub);font-size:14px;white-space:pre-line}
+.acts{margin-left:auto;display:flex}.del,.ed{background:none;border:0;color:var(--sub);padding:8px}.ed{border:2px solid var(--acc);background:transparent;color:var(--acc);font-weight:700;border-radius:999px;padding:8px 18px;white-space:nowrap}.ed.todo{background:var(--acc);color:var(--acc-ink)}.link{background:none;border:0;color:var(--acc);text-decoration:underline;font-size:13px;padding:0 4px}.btn.sub{background:transparent;border:2px solid var(--line);color:var(--ink)}.sw{display:flex;gap:12px}.sw button{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0}.sw button.on{border-color:var(--ink)}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal .w{font-size:12px;color:var(--sub)}.cal button{aspect-ratio:1;border:2px solid transparent;border-radius:12px;background:var(--bg);font-size:14px;padding:0}.cal button.has{background:var(--acc);color:var(--acc-ink);font-weight:700}.cal button.sel{border-color:var(--ink)}.cal button.today{text-decoration:underline}.btn.warn{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+#outImg img{width:100%;border-radius:16px;border:2px solid var(--line)}
+.note{font-size:13px;color:var(--sub);margin:8px 0 0}
+.hrow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:8px 12px;margin-top:8px}
+.hrow.on{border-color:var(--acc);background:var(--acc2)}
+.hrow .th{display:flex;gap:4px}
+.hrow img{width:42px;height:42px;object-fit:cover;border-radius:10px}
+.hrow span{margin-left:auto;color:var(--sub);font-size:13px;white-space:nowrap}
+#formCard.editing{border-color:var(--acc);background:var(--acc2)}
+.ptg{display:grid;grid-template-columns:3em 1fr 1fr;gap:8px;align-items:center;margin-top:10px}
+.ptg .h{font-size:13px;color:var(--sub);text-align:center}.ptg b{color:var(--acc)}
+input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-radius:14px;background:var(--bg);font:inherit;color:inherit;min-width:0}
+.unit{display:flex;align-items:center;gap:4px}.unit span{color:var(--sub);font-size:13px}
+.addbox{border:2px dashed var(--line);border-radius:18px;padding:4px 12px 12px;margin-top:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.chk{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:14px}.chk input{width:20px;height:20px}
+#itemList .it,#foodList2 .it{display:flex;align-items:center;gap:6px;border-top:2px solid var(--line);padding:6px 0}
+#itemList .it:first-child,#foodList2 .it:first-child{border-top:0}
+.it .tg{font-size:12px;border-radius:999px;padding:1px 8px;background:var(--acc2);color:var(--acc);font-weight:700;flex:none}
+.it .tx{flex:1;min-width:0;background:none;border:0;text-align:left;padding:4px 0}
+.it .x{background:none;border:0;color:var(--sub);padding:6px 8px;font-size:18px}
+.prog{margin-top:8px}
+.pg{border:2px solid var(--line);border-radius:16px;padding:8px 12px;margin-top:8px}
+.pg b{display:block;color:var(--acc)}
+.tag{display:inline-block;font-size:13px;border-radius:999px;padding:2px 10px;margin:4px 4px 0 0;border:2px solid var(--line)}
+.tag.ok{background:var(--mint);border-color:var(--mint)}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
+#nextCard{border:2px solid var(--acc)}#nextCard.now{background:var(--acc2)}#nextTxt{margin:0;font-weight:700}#nextTxt .big{display:block;color:var(--acc);font-size:18px}
+.fin{border:2px solid var(--acc);background:var(--acc);color:var(--acc-ink);font-weight:700;border-radius:999px;padding:8px 14px;white-space:nowrap}
+#dayTools summary{color:var(--acc);text-decoration:underline;font-size:13px;cursor:pointer;margin-top:14px;padding:6px 0}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <svg width="170" height="34" viewBox="0 0 170 34" aria-hidden="true">
+    <polygon points="20,6 28,10 28,20 20,24 12,20 12,10" fill="#f4c7d3"/><polygon points="52,16 58,19 58,26 52,29 46,26 46,19" fill="#cfe8de"/>
+    <polygon points="85,4 92,8 92,16 85,20 78,16 78,8" fill="#f6dfa0"/><polygon points="118,14 125,18 125,25 118,29 111,25 111,18" fill="#d9cdee"/>
+    <polygon points="150,6 157,10 157,18 150,22 143,18 143,10" fill="#c9def0"/>
+  </svg>
+  <h1>ポーションログ</h1>
+  <p class="sub">毎食のポーションを記録して、1枚にまとめよう</p>
+  <p class="sub"><span id="hello"></span><button class="link" id="rename" hidden>名前・色を変更</button><button class="link" id="ptEdit" hidden>ポーションを変更</button></p>
+</header>
+
+<section class="card" id="noStore" hidden style="border:2px solid var(--acc)">
+  <p style="margin:0;font-weight:700;color:var(--acc)">この開き方では、記録をスマホに保存できません</p>
+  <p class="note" style="margin:4px 0 0">プレビューやLINEの中などで開いているためです。記録や「この日のポーション」は画面には出ますが、閉じると消えます。ふだんは、ホーム画面のアイコンか、SafariやChromeで開いてください。</p>
+</section>
+
+<section class="card" id="nextCard" hidden>
+  <p id="nextTxt"></p>
+  <button class="link" id="notifOn" hidden>スマホのお知らせをオンにする</button>
+  <p class="note" id="notifNote" style="margin:4px 0 0"></p>
+</section>
+
+<section class="card" id="setup" hidden>
+  <h2>はじめに</h2>
+  <p class="note" style="margin:0 0 8px">お名前と好きな色を選んでください。まとめ画像にも使われます。あとから変更もできます。</p>
+  <input type="text" id="who" placeholder="例：まろん" maxlength="20">
+  <label>色</label>
+  <div class="sw" id="sw"></div>
+  <button class="btn" id="start">はじめる</button>
+</section>
+
+<section class="card" id="ptCard" hidden>
+  <h2>私のダイエットポーション</h2>
+  <p class="note" style="margin:0">コーチと決めた、1食ごとのポーションを入れてください。脂質は毎食15g以下です。</p>
+  <div class="ptg" id="ptGrid"><span></span><span class="h">カテ1</span><span class="h">カテ2</span></div>
+  <button class="btn" id="ptSave">保存する</button>
+  <button class="btn sub" id="ptCancel" hidden>やめる</button>
+  <p class="note" id="ptMsg"></p>
+</section>
+
+<section class="card">
+  <label for="date" style="margin-top:0">日付</label>
+  <input type="date" id="date">
+</section>
+
+<section class="card" id="formCard">
+  <h2 id="formTitle">食事を記録する</h2>
+  <label class="pick" for="photo" id="pickLabel">写真を撮る・選ぶ</label>
+  <input type="file" id="photo" accept="image/*" hidden>
+  <img id="prev" alt="選んだ写真">
+  <button type="button" class="btn sub" id="rot" hidden>写真を左に回転する</button>
+  <button type="button" class="btn sub" id="rmPhoto" hidden>写真を外す</button>
+  <p class="note" id="nophoto">写真がなくても大丈夫です。食べたものだけで保存できます。</p>
+  <label>区分</label>
+  <div class="pills" id="kinds"><button data-k="朝">朝</button><button data-k="昼">昼</button><button data-k="間食">間食</button><button data-k="夜">夜</button></div>
+  <div class="row">
+    <div><label for="time">食べ始め</label><input type="time" id="time"></div>
+    <div><label for="end">食べ終わり</label><input type="time" id="end"></div>
+  </div>
+  <button type="button" class="btn sub" id="endNow">今、食べ終わった</button>
+  <label>カテ1・カテ2</label>
+  <div id="itemList"></div>
+  <div id="mealProg" class="prog"></div>
+  <div class="addbox">
+    <label>カテゴリー</label>
+    <div class="pills" id="cats"><button type="button" data-c="1">カテ1</button><button type="button" data-c="2">カテ2</button></div>
+    <label for="fName">食品名</label>
+    <input type="text" id="fName" placeholder="ご飯" list="foodNames" autocomplete="off"><datalist id="foodNames"></datalist>
+    <div class="g2">
+      <div><label for="fAmt">量</label><input type="text" id="fAmt" placeholder="120g"></div>
+      <div><label for="fKcal">kcal</label><input type="number" id="fKcal" inputmode="decimal" min="0" placeholder="200"></div>
+      <div><label for="fP">ポーション</label><div class="unit"><input type="number" id="fP" inputmode="decimal" step="0.1" min="0" placeholder="2.5"><span>p</span></div></div>
+      <div id="fFatW"><label for="fFat">脂質</label><div class="unit"><input type="number" id="fFat" inputmode="decimal" step="0.1" min="0" placeholder="4"><span>g</span></div></div>
+    </div>
+    <p class="note" id="fHint">kcalを入れると、80kcal＝1pで計算します（0.1p単位で切り上げ。ご飯は0.5p単位）。分からないときは、<a id="mext" href="https://fooddb.mext.go.jp/" target="_blank" rel="noopener">食品成分データベース</a>（広告なし。重さを入れて「重量変更」）か、<a id="slism" href="https://calorie.slism.jp/" target="_blank" rel="noopener">カロリーSlism</a>で調べる</p>
+    <label class="chk"><input type="checkbox" id="fReg">よく使う食品に登録する</label>
+    <button type="button" class="btn sub" id="fAdd">カテ1に追加</button>
+    <p class="note" id="fMsg"></p>
+  </div>
+  <label id="favLabel" hidden>よく使う食品（タップで追加）</label>
+  <div id="favs" class="pills" style="flex-wrap:wrap"></div>
+  <label for="what">その他（野菜・汁物など。ポーションの計算には入りません）</label>
+  <textarea id="what" rows="2" placeholder="サラダ 味噌汁"></textarea>
+  <p id="fmtPrev"></p>
+  <label id="chipsLabel" hidden>よく食べるもの（タップで追加）</label>
+  <div id="chips"></div>
+  <button class="btn" id="add">この食事を追加</button>
+  <button class="btn sub" id="quick">写真だけ先に保存</button>
+  <button class="btn sub" id="cancel" hidden>やめる</button>
+  <button class="btn sub" id="delEntry" hidden>この食事を削除</button>
+</section>
+
+<section class="card">
+  <h2>この日のポーション</h2>
+  <div id="dayProg" style="margin-bottom:14px"></div>
+  <h2>この日の食事</h2>
+  <div id="list"></div>
+  <button class="btn" id="make">1枚にまとめる</button>
+  <p class="note" id="msg" style="white-space:pre-line"></p>
+  <details id="dayTools" hidden>
+    <summary>日付の変更・この日の記録の削除</summary>
+    <label for="moveTo">この日の記録を別の日に移す</label>
+    <input type="date" id="moveTo">
+    <button class="btn sub" id="moveDay">日付を変更する</button>
+    <button class="btn sub" id="delDay">この日の記録をすべて削除</button>
+  </details>
+</section>
+
+<section class="card" id="out" hidden>
+  <div id="outImg"></div>
+  <button class="btn" id="saveImg">画像を保存</button>
+  <p class="note" id="msg2">保存したら、チャットワークでコーチとの個別チャットに添付して送ります。保存できないときは、画像を長押しして「写真に保存」してください。</p>
+</section>
+
+<section class="card">
+  <h2>カレンダー</h2>
+  <div class="calhead"><button class="link" id="prevM">‹ 前の月</button><b id="calT"></b><button class="link" id="nextM">次の月 ›</button></div>
+  <div class="cal" id="cal"></div>
+  <p class="note" id="streak"></p>
+  <h2 style="margin-top:18px">最近の記録（3日分）</h2>
+  <div id="hist"></div>
+</section>
+
+<section class="card" id="foodCard">
+  <h2>よく使う食品</h2>
+  <p class="note" style="margin:0">登録しておくと、記録のときにタップするだけで入ります。量を「50g」のようにgで登録すると、記録で「120g」と入れたときにポーションを計算します。</p>
+  <div id="foodList2" style="margin-top:8px"></div>
+  <details style="margin-top:8px">
+    <summary class="link" style="padding:6px 0;cursor:pointer">食品を登録する</summary>
+    <div class="pills" id="rCats" style="margin-top:8px"><button type="button" data-c="1" class="on">カテ1</button><button type="button" data-c="2">カテ2</button></div>
+    <label for="rName">食品名</label><input type="text" id="rName" placeholder="納豆">
+    <div class="g2">
+      <div><label for="rAmt">量</label><input type="text" id="rAmt" placeholder="1パック"></div>
+      <div><label for="rKcal">kcal</label><input type="number" id="rKcal" inputmode="decimal" min="0" placeholder="80"></div>
+      <div><label for="rP">ポーション</label><div class="unit"><input type="number" id="rP" inputmode="decimal" step="0.1" min="0" placeholder="1"><span>p</span></div></div>
+      <div id="rFatW"><label for="rFat">脂質</label><div class="unit"><input type="number" id="rFat" inputmode="decimal" step="0.1" min="0" placeholder="4"><span>g</span></div></div>
+    </div>
+    <button type="button" class="btn sub" id="rAdd">登録する</button>
+    <p class="note" id="rMsg"></p>
+  </details>
+</section>
+
+<section class="card" id="backupCard">
+  <h2>バックアップ</h2>
+  <p class="note">記録をファイルに書き出しておくと、スマホを替えたり、データが消えたりしても、読み込んで戻せます。</p>
+  <p class="note" id="bkStatus"></p>
+  <button class="btn" id="bkOut">記録を書き出す</button>
+  <button class="btn sub" id="bkIn">記録を読み込む</button>
+  <input type="file" id="bkFile" accept=".json,application/json" hidden>
+  <p class="note" id="bkMsg"></p>
+</section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'portionLog.v1', WD = '日月火水木金土';
+let data = {}, photo = null, blobOut = null, kind = '朝', editId = null;
+let ready = false, busy = false, db = null, askedPersist = false;
+const STORE = 'days';
+function openDB() {
+  return new Promise((res, rej) => {
+    if (!window.indexedDB) { rej(new Error('no indexedDB')); return; }
+    const r = indexedDB.open('portionLog', 1);
+    r.onupgradeneeded = () => { r.result.createObjectStore(STORE); r.result.createObjectStore('meta'); };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.onblocked = () => rej(new Error('blocked'));
+  });
+}
+const idbReq = rq => new Promise((res, rej) => { rq.onsuccess = () => res(rq.result); rq.onerror = () => rej(rq.error); });
+const idbDone = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+const lsLoad = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } };
+let noStore = false;
+async function init() {
+  try {
+    db = await openDB();
+    const done = await idbReq(db.transaction('meta').objectStore('meta').get('migrated'));
+    if (!done) {
+      const old = lsLoad(), tx = db.transaction([STORE, 'meta'], 'readwrite'), st = tx.objectStore(STORE);
+      Object.keys(old).forEach(k => { if (Array.isArray(old[k]) && old[k].length) st.put(old[k], k); });
+      tx.objectStore('meta').put(Date.now(), 'migrated');
+      await idbDone(tx);
+    }
+    const st2 = db.transaction(STORE).objectStore(STORE);
+    const [keys, vals] = await Promise.all([idbReq(st2.getAllKeys()), idbReq(st2.getAll())]);
+    data = {}; keys.forEach((k, i) => { data[k] = vals[i]; });
+  } catch (e) { db = null; data = lsLoad(); }
+  // データベースもlocalStorageも使えない開き方（プレビューなど）：画面の上だけで記録する
+  if (!db) { try { localStorage.setItem('portionLog.test', '1'); localStorage.removeItem('portionLog.test'); } catch (e) { noStore = true; $('noStore').hidden = false; } }
+  try {
+    let f = null;
+    if (db) f = await idbReq(db.transaction('meta').objectStore('meta').get('freq'));
+    else { try { f = JSON.parse(localStorage.getItem('portionLog.freq') || 'null'); } catch (e) {} }
+    if (f) freq = f; else { freq = buildFreq(); saveFreq(); }
+  } catch (e) { freq = buildFreq(); }
+  try {
+    let f = null;
+    if (db) f = await idbReq(db.transaction('meta').objectStore('meta').get('foods'));
+    else { try { f = JSON.parse(localStorage.getItem('portionLog.foods') || 'null'); } catch (e) {} }
+    if (Array.isArray(f)) foods = f.filter(validFood);
+  } catch (e) {}
+  ready = true; renderFoods(); render(); updatePreview(); renderItems();
+}
+async function save(changed) {
+  if (noStore) return true;
+  try {
+    if (db) {
+      const tx = db.transaction(STORE, 'readwrite'), st = tx.objectStore(STORE);
+      changed.forEach(k => { if ((data[k] || []).length) st.put(data[k], k); else st.delete(k); });
+      await idbDone(tx);
+    } else localStorage.setItem(KEY, JSON.stringify(data));
+    if (!askedPersist) { askedPersist = true; try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} }
+    return true;
+  } catch (e) {
+    $('msg').textContent = '保存できませんでした。スマホの空き容量を確認するか、古い日の記録を削除してください。';
+    return false;
+  }
+}
+const pad = n => String(n).padStart(2, '0');
+const now = new Date();
+$('date').value = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+$('time').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
+const hr = now.getHours(); kind = hr < 10 ? '朝' : hr < 15 ? '昼' : hr < 17 ? '間食' : '夜';
+
+function mark() { document.querySelectorAll('#kinds button').forEach(b => b.classList.toggle('on', b.dataset.k === kind)); }
+document.querySelectorAll('#kinds button').forEach(b => b.onclick = () => { kind = b.dataset.k; mark(); updateMealProg(); });
+mark();
+let name = '', hue = 344, pick = 344;
+try { name = localStorage.getItem('portionLog.name') || ''; const hs = localStorage.getItem('portionLog.hue'); if (hs) hue = pick = Number(hs); } catch (e) {}
+const HUES = [['ピンク', 344], ['ミント', 160], ['ラベンダー', 265], ['ブルー', 205], ['オレンジ', 35]];
+const darkNow = () => (matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light') || document.documentElement.dataset.theme === 'dark';
+function applyTheme(h) {
+  const s = document.documentElement.style, dk = darkNow();
+  s.setProperty('--acc', dk ? 'hsl(' + h + ' 70% 76%)' : 'hsl(' + h + ' 65% 70%)');
+  s.setProperty('--acc2', dk ? 'hsl(' + h + ' 22% 22%)' : 'hsl(' + h + ' 70% 93%)');
+  s.setProperty('--line', dk ? 'hsl(' + h + ' 16% 27%)' : 'hsl(' + h + ' 60% 91%)');
+  s.setProperty('--bg', dk ? 'hsl(' + h + ' 14% 15%)' : 'hsl(' + h + ' 100% 98%)');
+}
+function markSw() { document.querySelectorAll('#sw button').forEach(b => b.classList.toggle('on', Number(b.dataset.h) === pick)); }
+HUES.forEach(([n, h]) => {
+  const b = document.createElement('button'); b.type = 'button'; b.dataset.h = h; b.title = n; b.setAttribute('aria-label', n);
+  b.style.background = 'hsl(' + h + ' 65% 72%)';
+  b.onclick = () => { pick = h; applyTheme(h); markSw(); };
+  $('sw').appendChild(b);
+});
+applyTheme(hue); markSw();
+function applyName() {
+  const has = !!name;
+  $('setup').hidden = has; $('rename').hidden = !has; $('ptEdit').hidden = !has;
+  $('hello').textContent = has ? name + 'さん' : '';
+  document.querySelectorAll('main > section:not(#setup)').forEach(s => s.style.display = has ? '' : 'none');
+  if (has && !portion) openPt();
+}
+$('start').onclick = () => {
+  const v = $('who').value.trim(); if (!v) return;
+  name = v; hue = pick;
+  try { localStorage.setItem('portionLog.name', name); localStorage.setItem('portionLog.hue', String(hue)); } catch (e) {}
+  applyName();
+};
+
+// ---- ポーション設定（朝・昼・夜 × カテ1・カテ2）----
+const MEALS = ['朝', '昼', '夜'], FAT_MAX = 15, PKEY = 'portionLog.portion';
+const r1 = x => Math.round(x * 10) / 10, r05 = x => Math.round(x * 2) / 2;
+// ポーションの丸め：0.1p単位で切り上げ。ご飯だけは0.5p単位（120g＝2.4p → 2.5p）
+const RICE = /ご飯|ごはん|御飯|ライス|白米|玄米|米飯|雑穀米/;
+const ceil1 = x => Math.ceil(Math.round(x * 1000) / 100) / 10;
+const pRound = (x, name) => RICE.test(name || '') ? r05(x) : ceil1(x);
+const num = v => { const s = String(v == null ? '' : v).trim(); if (s === '') return null; const n = Number(s); return isFinite(n) && n >= 0 ? n : NaN; };
+function validPortion(p) { return !!p && typeof p === 'object' && MEALS.every(k => Array.isArray(p[k]) && p[k].length === 2 && p[k].every(x => typeof x === 'number' && isFinite(x) && x >= 0)); }
+let portion = null;
+try { const p = JSON.parse(localStorage.getItem(PKEY) || 'null'); if (validPortion(p)) portion = p; } catch (e) {}
+MEALS.forEach(k => {
+  const b = document.createElement('b'); b.textContent = k; $('ptGrid').appendChild(b);
+  [1, 2].forEach(c => {
+    const w = document.createElement('div'); w.className = 'unit';
+    w.innerHTML = '<input type="number" inputmode="decimal" step="0.1" min="0"><span>p</span>';
+    w.querySelector('input').id = 'pt' + k + c; w.querySelector('input').setAttribute('aria-label', k + ' カテ' + c);
+    $('ptGrid').appendChild(w);
+  });
+});
+function openPt() {
+  MEALS.forEach(k => [1, 2].forEach(c => { $('pt' + k + c).value = portion ? portion[k][c - 1] : ''; }));
+  $('ptMsg').textContent = ''; $('ptCancel').hidden = !portion; $('ptCard').hidden = false;
+  $('ptCard').scrollIntoView({ behavior: 'smooth' });
+}
+$('ptEdit').onclick = openPt;
+$('ptCancel').onclick = () => { $('ptCard').hidden = true; };
+$('ptSave').onclick = () => {
+  const p = {};
+  for (const k of MEALS) {
+    p[k] = [1, 2].map(c => num($('pt' + k + c).value));
+    if (p[k].some(x => x === null || isNaN(x))) { $('ptMsg').textContent = k + 'のポーションを数字で入れてください。'; return; }
+  }
+  portion = p;
+  try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {}
+  $('ptCard').hidden = true; render(); updateMealProg();
+};
+
+// ---- よく使う食品 ----
+let foods = [];
+const gramOf = s => { const m = /^\s*(\d+(?:\.\d+)?)\s*(g|ｇ|グラム)\s*$/i.exec(s || ''); return m ? Number(m[1]) : null; };
+const findFood = n => foods.find(f => f.name === (n || '').trim());
+async function saveFoods() {
+  try {
+    if (db) { const tx = db.transaction('meta', 'readwrite'); tx.objectStore('meta').put(foods, 'foods'); await idbDone(tx); }
+    else localStorage.setItem('portionLog.foods', JSON.stringify(foods));
+  } catch (e) {}
+}
+function validFood(f) { return f && typeof f.name === 'string' && f.name.trim() && (f.c === 1 || f.c === 2) && typeof f.p === 'number' && isFinite(f.p) && f.p >= 0 && (f.fat == null || (typeof f.fat === 'number' && isFinite(f.fat))) && (f.amt == null || typeof f.amt === 'string'); }
+function upsertFood(f) {
+  const i = foods.findIndex(x => x.name === f.name);
+  if (i >= 0) foods[i] = f; else foods.push(f);
+  saveFoods(); renderFoods();
+}
+function renderFoods() {
+  $('foodNames').innerHTML = '';
+  foods.forEach(f => { const o = document.createElement('option'); o.value = f.name; $('foodNames').appendChild(o); });
+  $('favs').innerHTML = ''; $('favLabel').hidden = !foods.length;
+  foods.forEach(f => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = f.name;
+    b.onclick = () => { fItems.push({ name: f.name, c: f.c, amt: f.amt || '', p: f.p, fat: f.c === 2 ? (f.fat == null ? null : f.fat) : null }); renderItems(); };
+    $('favs').appendChild(b);
+  });
+  const L = $('foodList2'); L.innerHTML = foods.length ? '' : '<p class="note">まだ登録はありません。</p>';
+  foods.forEach((f, i) => {
+    const r = document.createElement('div'); r.className = 'it';
+    r.innerHTML = '<span class="tg"></span><span class="tx"></span><button type="button" class="x" aria-label="削除">×</button>';
+    r.querySelector('.tg').textContent = 'カテ' + f.c; r.querySelector('.tx').textContent = tok(f);
+    r.querySelector('.x').onclick = () => { foods.splice(i, 1); saveFoods(); renderFoods(); };
+    L.appendChild(r);
+  });
+}
+// 1品の表記：ご飯（2.5p）　ささみ（1.5p／脂質:0.3g）。量は書かない
+function tok(it) { return it.name + '（' + r1(it.p) + 'p' + (it.c === 2 && it.fat != null ? '／脂質:' + r1(it.fat) + 'g' : '') + '）'; }
+function sums(list) {
+  const s = { c1: 0, c2: 0, fat: 0, n: 0 };
+  list.forEach(e => (e.items || []).forEach(it => { s.n++; if (it.c === 1) s.c1 += it.p; else { s.c2 += it.p; s.fat += it.fat || 0; } }));
+  return s;
+}
+function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['ng', 'あと' + r1(-d) + 'p'] : ['ng', r1(d) + 'p多い']; }
+function progHTML(k, s) {
+  const tag = (cls, t) => '<span class="tag ' + cls + '">' + t + '</span>';
+  let h = '';
+  if (portion && portion[k]) {
+    [[s.c1, portion[k][0], 'カテ1'], [s.c2, portion[k][1], 'カテ2']].forEach(([v, t, lb]) => { const [cl, tx] = judge(v, t); h += tag(cl, lb + ' ' + r1(v) + ' / ' + r1(t) + 'p ' + tx); });
+  } else h += tag('', 'カテ1 ' + r1(s.c1) + 'p') + tag('', 'カテ2 ' + r1(s.c2) + 'p');
+  h += tag(s.fat > FAT_MAX ? 'ng' : 'ok', '脂質 ' + r1(s.fat) + ' / ' + FAT_MAX + 'g' + (s.fat > FAT_MAX ? ' オーバー' : ''));
+  return h;
+}
+function minutes(a, b) { if (!a || !b) return null; const [h1, m1] = a.split(':').map(Number), [h2, m2] = b.split(':').map(Number); let d = h2 * 60 + m2 - h1 * 60 - m1; if (d < 0) d += 1440; return d; }
+$('rename').onclick = () => { $('who').value = name; pick = hue; markSw(); $('start').textContent = '変更する'; $('setup').hidden = false; $('who').focus(); };
+applyName();
+
+let armed = false;
+function armDel(on) {
+  armed = on; const b = $('delEntry');
+  b.textContent = on ? 'もう一度押すと削除します' : 'この食事を削除'; b.classList.toggle('warn', on);
+}
+$('delEntry').onclick = async () => {
+  if (!editId) return;
+  if (!armed) { armDel(true); return; }
+  const d = $('date').value;
+  const before = JSON.stringify(data[d] || []);
+  data[d] = (data[d] || []).filter(x => x.id !== editId);
+  if (!(await save([d]))) { data[d] = JSON.parse(before); return; }
+  resetForm(); $('out').hidden = true; render();
+};
+function setNow() {
+  const n = new Date(), h = n.getHours();
+  $('time').value = pad(h) + ':' + pad(n.getMinutes());
+  kind = h < 10 ? '朝' : h < 15 ? '昼' : h < 17 ? '間食' : '夜'; mark();
+}
+const SEPRE = /[\s、,，／\/・]+/;
+const items = t => (t || '').split(SEPRE).filter(Boolean);
+const fmt = t => items(t).join('・');
+let freq = {};
+function buildFreq() {
+  const f = {};
+  Object.values(data).forEach(l => (l || []).forEach(e => items(e.what).forEach(it => { const x = f[it] || { n: 0, t: 0 }; x.n++; x.t = Math.max(x.t, e.id || 0); f[it] = x; })));
+  return f;
+}
+async function saveFreq() {
+  try {
+    if (db) { const tx = db.transaction('meta', 'readwrite'); tx.objectStore('meta').put(freq, 'freq'); await idbDone(tx); }
+    else localStorage.setItem('portionLog.freq', JSON.stringify(freq));
+  } catch (e) {}
+}
+function bumpFreq(now, prev) {
+  const had = new Set(items(prev));
+  items(now).forEach(it => { if (had.has(it)) return; const x = freq[it] || { n: 0, t: 0 }; x.n++; x.t = Date.now(); freq[it] = x; });
+  const ks = Object.keys(freq);
+  if (ks.length > 300) ks.sort((a, b) => freq[a].n - freq[b].n || freq[a].t - freq[b].t).slice(0, ks.length - 300).forEach(k => delete freq[k]);
+}
+function updatePreview() {
+  const f = fmt($('what').value); $('fmtPrev').textContent = f ? '表示：' + f : '';
+  const typed = new Set(items($('what').value));
+  const top = Object.keys(freq).filter(k => !typed.has(k)).sort((a, b) => freq[b].n - freq[a].n || freq[b].t - freq[a].t).slice(0, 10);
+  $('chips').innerHTML = ''; $('chipsLabel').hidden = !top.length;
+  top.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = k; $('chips').appendChild(b); });
+}
+$('what').oninput = updatePreview;
+$('chips').onclick = e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  const t = $('what'), cur = t.value;
+  t.value = cur && !SEPRE.test(cur.slice(-1)) ? cur + ' ' + b.textContent : cur + b.textContent;
+  updatePreview();
+};
+$('prev').onclick = () => $('prev').classList.toggle('big');
+function syncPhotoUI() {
+  const has = !!photo;
+  $('prev').style.display = has ? 'block' : 'none';
+  if (has) $('prev').src = photo; else $('prev').removeAttribute('src');
+  $('prev').classList.remove('big');
+  $('rot').hidden = !has; $('rmPhoto').hidden = !has; $('nophoto').hidden = has;
+  $('pickLabel').textContent = has ? '写真を変更する' : '写真を撮る・選ぶ';
+}
+$('rmPhoto').onclick = () => { photo = null; $('photo').value = ''; syncPhotoUI(); };
+
+// ---- カテ1・カテ2の入力 ----
+let fItems = [], fCat = 1, rCat = 1;
+function markCat() {
+  document.querySelectorAll('#cats button').forEach(b => b.classList.toggle('on', Number(b.dataset.c) === fCat));
+  $('fFatW').style.visibility = fCat === 2 ? '' : 'hidden'; $('fAdd').textContent = 'カテ' + fCat + 'に追加';
+}
+document.querySelectorAll('#cats button').forEach(b => b.onclick = () => { fCat = Number(b.dataset.c); markCat(); });
+function markRCat() {
+  document.querySelectorAll('#rCats button').forEach(b => b.classList.toggle('on', Number(b.dataset.c) === rCat));
+  $('rFatW').style.visibility = rCat === 2 ? '' : 'hidden';
+}
+document.querySelectorAll('#rCats button').forEach(b => b.onclick = () => { rCat = Number(b.dataset.c); markRCat(); });
+markCat(); markRCat();
+function clearAdd() { ['fName', 'fAmt', 'fKcal', 'fP', 'fFat'].forEach(i => $(i).value = ''); $('fReg').checked = false; $('fMsg').textContent = ''; slismLink(); }
+function slismLink() {
+  const n = $('fName').value.trim(), q = encodeURIComponent(n);
+  $('slism').href = n ? 'https://calorie.slism.jp/?searchWord=' + q + '&search=' + encodeURIComponent('検索') : 'https://calorie.slism.jp/';
+  $('mext').href = n ? 'https://fooddb.mext.go.jp/freeword/fword_select.pl?SEARCH_WORD=' + q + '&function1=' + encodeURIComponent('検索') : 'https://fooddb.mext.go.jp/';
+}
+// 登録した食品をgで登録していれば、記録した量（g）からポーションと脂質を計算する
+function fromFood() {
+  const f = findFood($('fName').value); if (!f) return;
+  const base = gramOf(f.amt), g = gramOf($('fAmt').value);
+  const k = base && g ? g / base : 1;
+  $('fP').value = k === 1 ? f.p : pRound(f.p * k, f.name);
+  if (f.c === 2 && f.fat != null) $('fFat').value = r1(f.fat * k);
+}
+$('fName').oninput = () => {
+  slismLink();
+  const f = findFood($('fName').value); if (!f) return;
+  fCat = f.c; markCat(); if (!$('fAmt').value) $('fAmt').value = f.amt || ''; fromFood();
+};
+$('fAmt').oninput = () => { if (findFood($('fName').value)) fromFood(); };
+$('fKcal').oninput = () => { const k = num($('fKcal').value); if (k) $('fP').value = pRound(k / 80, $('fName').value); };
+$('rKcal').oninput = () => { const k = num($('rKcal').value); if (k) $('rP').value = pRound(k / 80, $('rName').value); };
+$('fAdd').onclick = () => {
+  const name = $('fName').value.trim(), p = num($('fP').value), fat = fCat === 2 ? num($('fFat').value) : null;
+  if (!name) { $('fMsg').textContent = '食品名を入れてください。'; return; }
+  if (p === null || isNaN(p)) { $('fMsg').textContent = 'ポーションを数字で入れてください（kcalを入れると自動で入ります）。'; return; }
+  if (isNaN(fat)) { $('fMsg').textContent = '脂質は数字で入れてください。'; return; }
+  const it = { name, c: fCat, amt: $('fAmt').value.trim(), p, fat: fCat === 2 ? fat : null };
+  fItems.push(it);
+  if ($('fReg').checked) upsertFood({ ...it });
+  clearAdd(); renderItems();
+};
+$('rAdd').onclick = () => {
+  const name = $('rName').value.trim(), p = num($('rP').value), fat = rCat === 2 ? num($('rFat').value) : null;
+  if (!name) { $('rMsg').textContent = '食品名を入れてください。'; return; }
+  if (p === null || isNaN(p)) { $('rMsg').textContent = 'ポーションを数字で入れてください。'; return; }
+  if (isNaN(fat)) { $('rMsg').textContent = '脂質は数字で入れてください。'; return; }
+  upsertFood({ name, c: rCat, amt: $('rAmt').value.trim(), p, fat });
+  ['rName', 'rAmt', 'rKcal', 'rP', 'rFat'].forEach(i => $(i).value = '');
+  $('rMsg').textContent = '「' + name + '」を登録しました。';
+};
+function renderItems() {
+  const L = $('itemList'); L.innerHTML = fItems.length ? '' : '<p class="note" style="margin:0">下の「カテ1に追加」か、よく使う食品から入れてください。</p>';
+  fItems.slice().sort((a, b) => a.c - b.c).forEach(it => {
+    const r = document.createElement('div'); r.className = 'it';
+    r.innerHTML = '<span class="tg"></span><button type="button" class="tx"></button><button type="button" class="x" aria-label="削除">×</button>';
+    r.querySelector('.tg').textContent = 'カテ' + it.c; r.querySelector('.tx').textContent = tok(it);
+    r.querySelector('.tx').onclick = () => { // タップで直す：入力欄に戻す
+      fItems.splice(fItems.indexOf(it), 1);
+      fCat = it.c; markCat(); $('fName').value = it.name; $('fAmt').value = it.amt || ''; $('fKcal').value = ''; $('fP').value = it.p; $('fFat').value = it.fat == null ? '' : it.fat;
+      $('fMsg').textContent = '直したら「カテ' + it.c + 'に追加」を押してください。'; slismLink(); renderItems(); $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    r.querySelector('.x').onclick = () => { fItems.splice(fItems.indexOf(it), 1); renderItems(); };
+    L.appendChild(r);
+  });
+  updateMealProg();
+}
+// 記録中の食事の到達度（同じ日・同じ区分の、ほかの記録も合わせる）
+function updateMealProg() {
+  if (!ready) return;
+  const d = $('date').value, others = (data[d] || []).filter(x => x.kind === kind && x.id !== editId);
+  const s = sums(others.concat([{ items: fItems }]));
+  $('mealProg').innerHTML = s.n ? '<div class="pg"><b>' + kind + 'のポーション' + (others.length ? '（この日の' + kind + 'の記録を合わせて）' : '') + '</b>' + progHTML(kind, s) + '</div>' : '';
+}
+$('endNow').onclick = () => { const n = new Date(); $('end').value = pad(n.getHours()) + ':' + pad(n.getMinutes()); };
+function resetForm() {
+  editId = null; $('msg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
+  $('what').value = ''; $('end').value = ''; fItems = []; clearAdd(); syncPhotoUI(); updatePreview();
+  $('add').textContent = 'この食事を追加'; $('cancel').hidden = true;
+  setNow(); renderItems();
+}
+$('cancel').onclick = resetForm;
+function startEdit(e) {
+  editId = e.id; $('formTitle').textContent = '修正中：' + e.kind + ' ' + jpTime(e.time); $('formCard').classList.add('editing'); $('quick').hidden = true; $('delEntry').hidden = false; armDel(false); photo = e.img; kind = e.kind; mark();
+  $('time').value = e.time; $('end').value = e.end || ''; $('what').value = e.what;
+  fItems = (e.items || []).map(x => ({ ...x })); clearAdd(); renderItems(); syncPhotoUI(); updatePreview();
+  $('add').textContent = '変更を保存'; $('cancel').hidden = false;
+  $('formCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+function jpTime(t) { const [h, m] = t.split(':').map(Number); return m === 0 ? h + '時' : m === 30 ? h + '時半' : h + '時' + m + '分'; }
+function dotDate(d) { const [y, m, dd] = d.split('-').map(Number); return y + '.' + String(m).padStart(2, '0') + '.' + String(dd).padStart(2, '0') + '(' + WD[new Date(y, m - 1, dd).getDay()] + ')'; }
+function jpDate(d) { const [y, m, dd] = d.split('-').map(Number); return m + '月' + dd + '日（' + WD[new Date(y, m - 1, dd).getDay()] + '）'; }
+const timeRange = e => jpTime(e.time) + (e.end ? '〜' + jpTime(e.end) : '');
+const entryHas = e => !!(e.what || (e.items || []).length);
+function entryText(e) { const its = (e.items || []).slice().sort((a, b) => a.c - b.c); return its.map(tok).join('　') + (e.what ? (its.length ? '\n' : '') + fmt(e.what) : ''); }
+function entriesOf(d) { return (data[d] || []).slice().sort((a, b) => a.time.localeCompare(b.time)); }
+
+function render() {
+  const d = $('date').value, list = entriesOf(d);
+  $('list').innerHTML = list.length ? '' : '<p class="note">この日はまだ記録がありません。</p>';
+  $('dayTools').hidden = !list.length; $('dayTools').open = false; $('moveTo').value = d; armDay(false); bkStatus();
+  const isToday = d === ymd(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  list.forEach(e => {
+    const el = document.createElement('div'); el.className = 'item';
+    el.innerHTML = '<img alt=""><div><b></b><span></span></div><div class="acts" style="flex-direction:column;gap:6px"><button class="ed">修正</button></div>';
+    if (e.img) el.querySelector('img').src = e.img; else { const n = document.createElement('div'); n.className = 'noimg'; n.textContent = '写真なし'; el.querySelector('img').replaceWith(n); }
+    const dur = minutes(e.time, e.end);
+    el.querySelector('b').textContent = e.kind + ' ' + timeRange(e) + (dur != null ? '（' + dur + '分）' : '');
+    const has = entryHas(e);
+    el.querySelector('span').textContent = has ? entryText(e) : '食べたものを入力してください';
+    if (!has) el.querySelector('span').style.color = 'var(--acc)';
+    el.querySelector('.ed').textContent = has ? '修正' : '入力';
+    el.querySelector('.ed').classList.toggle('todo', !has);
+    el.querySelector('.ed').onclick = () => startEdit(e);
+    if (!e.end && isToday) {
+      const f = document.createElement('button'); f.className = 'fin'; f.textContent = '食べ終わった';
+      f.onclick = async () => {
+        const n = new Date(), before = e.end; e.end = pad(n.getHours()) + ':' + pad(n.getMinutes());
+        if (!(await save([d]))) { e.end = before; return; }
+        render(); $('msg').textContent = e.kind + 'を' + jpTime(e.end) + 'に食べ終わりました。';
+      };
+      el.querySelector('.acts').prepend(f);
+    }
+    $('list').appendChild(el);
+  });
+  const kinds = MEALS.concat(list.some(e => e.kind === '間食') ? ['間食'] : []);
+  $('dayProg').innerHTML = (portion ? '' : '<p class="note">「ポーションを変更」から、朝・昼・夜のポーションを入れると、目標に届いたかが分かります。</p>') +
+    kinds.map(k => { const es = list.filter(e => e.kind === k), s = sums(es); return '<div class="pg"><b>' + k + (es.length ? '' : '（まだ記録がありません）') + '</b>' + (es.length ? progHTML(k, s) : '') + '</div>'; }).join('');
+  updateMealProg(); notes();
+  const days = Object.keys(data).filter(k => data[k].length).sort().reverse().slice(0, 3);
+  $('hist').innerHTML = days.length ? '' : '<p class="note">記録するとここに日ごとに並びます。</p>';
+  days.forEach(k => {
+    const b = document.createElement('button'); b.className = 'hrow' + (k === d ? ' on' : '');
+    const th = document.createElement('div'); th.className = 'th';
+    entriesOf(k).filter(e => e.img).slice(0, 3).forEach(e => { const i = document.createElement('img'); i.alt = ''; i.src = e.img; th.appendChild(i); });
+    const t = document.createElement('b'); t.textContent = jpDate(k);
+    const n = document.createElement('span'); n.textContent = data[k].length + '食';
+    b.append(th, t, n);
+    b.onclick = () => { $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    $('hist').appendChild(b);
+  });
+  renderCal();
+}
+
+let cal = { y: now.getFullYear(), m: now.getMonth() };
+const ymd = (y, m, d) => y + '-' + pad(m + 1) + '-' + pad(d);
+function renderCal() {
+  const sel = $('date').value, first = new Date(cal.y, cal.m, 1), last = new Date(cal.y, cal.m + 1, 0).getDate();
+  $('calT').textContent = cal.y + '年' + (cal.m + 1) + '月';
+  const el = $('cal'); el.innerHTML = '';
+  [...WD].forEach(w => { const s = document.createElement('div'); s.className = 'w'; s.textContent = w; el.appendChild(s); });
+  for (let i = 0; i < first.getDay(); i++) el.appendChild(document.createElement('div'));
+  const today = ymd(now.getFullYear(), now.getMonth(), now.getDate());
+  for (let d = 1; d <= last; d++) {
+    const k = ymd(cal.y, cal.m, d), b = document.createElement('button');
+    b.type = 'button'; b.textContent = d;
+    if ((data[k] || []).length) b.classList.add('has');
+    if (k === sel) b.classList.add('sel');
+    if (k === today) b.classList.add('today');
+    b.onclick = () => { $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    el.appendChild(b);
+  }
+  const t = new Date(now.getFullYear(), now.getMonth(), now.getDate()), has = x => (data[ymd(x.getFullYear(), x.getMonth(), x.getDate())] || []).length;
+  if (!has(t)) t.setDate(t.getDate() - 1);
+  let n = 0; while (has(t)) { n++; t.setDate(t.getDate() - 1); }
+  $('streak').textContent = n ? n + '日連続で記録しています。' : 'まだ連続の記録はありません。今日の分を記録しましょう。';
+}
+$('prevM').onclick = () => { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } renderCal(); };
+$('nextM').onclick = () => { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); };
+$('date').onchange = () => { $('out').hidden = true; resetForm(); render(); };
+
+const EXIFTEST = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD50ooor8MP9Uz/2Q==';
+let exifApplied = null;
+function browserAppliesExif() {
+  if (!exifApplied) exifApplied = new Promise(res => { const t = new Image(); t.onload = () => res(t.naturalWidth === 1); t.onerror = () => res(true); t.src = EXIFTEST; });
+  return exifApplied;
+}
+async function exifOrientation(file) {
+  try {
+    const v = new DataView(await file.slice(0, 131072).arrayBuffer());
+    if (v.getUint16(0) !== 0xFFD8) return 1;
+    let p = 2;
+    while (p + 4 < v.byteLength) {
+      const m = v.getUint16(p), len = v.getUint16(p + 2);
+      if (m === 0xFFE1 && v.getUint32(p + 4) === 0x45786966) {
+        const t = p + 10, le = v.getUint16(t) === 0x4949, ifd = t + v.getUint32(t + 4, le), n = v.getUint16(ifd, le);
+        for (let i = 0; i < n; i++) { const e = ifd + 2 + i * 12; if (v.getUint16(e, le) === 0x0112) return v.getUint16(e + 8, le); }
+        return 1;
+      }
+      if ((m & 0xFF00) !== 0xFF00) return 1;
+      p += 2 + len;
+    }
+  } catch (e) {}
+  return 1;
+}
+function shrink(file) {
+  return new Promise((res, rej) => {
+    Promise.all([exifOrientation(file), browserAppliesExif()]).then(([o0, applied]) => {
+      const o = applied ? 1 : o0, url = URL.createObjectURL(file), im = new Image();
+      im.onload = () => {
+        const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+        const k = 640 / (o > 4 ? ih : iw), w = Math.round(iw * k), h = Math.round(ih * k);
+        const c = document.createElement('canvas'), g = c.getContext('2d');
+        c.width = o > 4 ? h : w; c.height = o > 4 ? w : h;
+        const T = { 2: [-1, 0, 0, 1, w, 0], 3: [-1, 0, 0, -1, w, h], 4: [1, 0, 0, -1, 0, h], 5: [0, 1, 1, 0, 0, 0], 6: [0, 1, -1, 0, h, 0], 7: [0, -1, -1, 0, h, w], 8: [0, -1, 1, 0, 0, w] }[o];
+        if (T) g.transform(...T);
+        g.drawImage(im, 0, 0, w, h);
+        URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.72));
+      };
+      im.onerror = rej; im.src = url;
+    }, rej);
+  });
+}
+$('photo').onchange = async ev => {
+  const f = ev.target.files[0]; if (!f) return;
+  if (!editId) setNow();
+  try { photo = await shrink(f); syncPhotoUI(); }
+  catch (e) { $('msg').textContent = '写真を読み込めませんでした。'; }
+};
+function rotate(src) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => {
+      const c = document.createElement('canvas'); c.width = im.height; c.height = im.width;
+      const g = c.getContext('2d'); g.translate(0, c.height); g.rotate(-Math.PI / 2); g.drawImage(im, 0, 0);
+      res(c.toDataURL('image/jpeg', 0.72));
+    };
+    im.onerror = rej; im.src = src;
+  });
+}
+$('rot').onclick = async () => {
+  if (!photo) return;
+  try { photo = await rotate(photo); $('prev').src = photo; } catch (e) { $('msg').textContent = '回転できませんでした。'; }
+};
+let dayArmed = false;
+function armDay(on) {
+  dayArmed = on; const b = $('delDay');
+  b.textContent = on ? 'もう一度押すと、この日の記録をすべて削除します' : 'この日の記録をすべて削除';
+  b.classList.toggle('warn', on);
+}
+$('delDay').onclick = async () => {
+  const d = $('date').value;
+  if (!(data[d] || []).length) return;
+  if (!dayArmed) { armDay(true); return; }
+  const before = JSON.stringify(data[d]);
+  delete data[d];
+  if (!(await save([d]))) { data[d] = JSON.parse(before); return; }
+  resetForm(); $('out').hidden = true;
+  $('msg').textContent = jpDate(d) + 'の記録をすべて削除しました。';
+  render();
+};
+$('moveDay').onclick = async () => {
+  const from = $('date').value, to = $('moveTo').value, items = data[from] || [];
+  if (!items.length) return;
+  if (!to) { $('msg').textContent = '移す先の日付を選んでください。'; return; }
+  if (to === from) { $('msg').textContent = '今と同じ日付です。移す先の日付を変えてください。'; return; }
+  const bFrom = JSON.stringify(items), bTo = data[to] ? JSON.stringify(data[to]) : null;
+  data[to] = (data[to] || []).concat(items); delete data[from];
+  if (!(await save([from, to]))) { data[from] = JSON.parse(bFrom); if (bTo === null) delete data[to]; else data[to] = JSON.parse(bTo); return; }
+  $('date').value = to; resetForm(); $('out').hidden = true;
+  const [y, m] = to.split('-').map(Number); cal.y = y; cal.m = m - 1;
+  render();
+  $('msg').textContent = jpDate(from) + 'の記録を' + jpDate(to) + 'に移しました。' + (bTo !== null ? '（移し先にあった記録と合わせました）' : '');
+};
+async function commit(needText) {
+  if (busy) return;
+  if (!ready) { $('msg').textContent = '読み込み中です。少し待ってからもう一度押してください。'; return; }
+  busy = true;
+  try { await commitInner(needText); } finally { busy = false; }
+}
+// 保存したあとに、目標との差を知らせる（多くても少なくても、保存はする）
+function gapText(d, k) {
+  const es = (data[d] || []).filter(e => e.kind === k), s = sums(es);
+  if (!s.n || !portion || !portion[k]) return '';
+  const part = [[s.c1, portion[k][0], 'カテ1'], [s.c2, portion[k][1], 'カテ2']].map(([v, t, lb]) => lb + ' ' + judge(v, t)[1]);
+  part.push('脂質 ' + r1(s.fat) + 'g' + (s.fat > FAT_MAX ? '（' + r1(s.fat - FAT_MAX) + 'gオーバー）' : ''));
+  return '\n' + k + 'のポーション：' + part.join('、');
+}
+async function commitInner(needText) {
+  // 食品名が入ったまま「カテ○に追加」していないとき：入れられれば追加、入れられなければ「その他」に書いて、食事は保存する
+  let note = '';
+  const pend = $('fName').value.trim();
+  if (pend && !fItems.some(x => x.name === pend)) {
+    const p = num($('fP').value), fat = fCat === 2 ? num($('fFat').value) : null;
+    if (p !== null && !isNaN(p) && !isNaN(fat)) { fItems.push({ name: pend, c: fCat, amt: $('fAmt').value.trim(), p, fat: fCat === 2 ? fat : null }); note = '\n「' + pend + '」もカテ' + fCat + 'に入れました。'; }
+    else { $('what').value = ($('what').value.trim() ? $('what').value.trim() + ' ' : '') + pend; note = '\n「' + pend + '」はポーションが入っていないので、「その他」に入れました。あとで「修正」から直せます。'; }
+    clearAdd();
+  }
+  const hasFood = !!($('what').value.trim() || fItems.length);
+  if (!photo && !hasFood) { $('msg').textContent = '写真か、食べたもののどちらかを入れてください。'; return; }
+  if (needText && !hasFood) { $('msg').textContent = '食べたものを入れてください。あとで入れるなら「写真だけ先に保存」を押してください。'; return; }
+  const d = $('date').value;
+  const rec = { id: editId || Date.now(), kind, time: $('time').value, end: $('end').value || '', what: $('what').value.trim(), img: photo || '', items: fItems.map(x => ({ ...x })) };
+  const before = JSON.stringify(data[d] || []);
+  const prevWhat = editId ? ((data[d] || []).find(x => x.id === editId) || {}).what : '';
+  if (editId) data[d] = (data[d] || []).map(x => x.id === editId ? rec : x); else (data[d] = data[d] || []).push(rec);
+  if (!(await save([d]))) { data[d] = JSON.parse(before); return; }
+  const wasEdit = !!editId, hadText = entryHas(rec); bumpFreq(rec.what, prevWhat); saveFreq(); resetForm(); $('out').hidden = true;
+  render();
+  $('msg').textContent = (wasEdit ? '変更を保存しました。' : hadText ? '追加しました。' : '写真を保存しました。あとで「入力」を押すと、食べたものを書き込めます。') + note + gapText(d, rec.kind);
+  $('list').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+$('add').onclick = () => commit(!editId);
+$('quick').onclick = () => commit(false);
+
+const loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = src; });
+function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function hex(g, x, y, r, col, rot) { g.beginPath(); for (let i = 0; i < 6; i++) { const a = rot + i * Math.PI / 3; g.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); } g.closePath(); g.fillStyle = col; g.fill(); }
+const wrap = (g, text, maxW) => wrapParts(g, items(text), '・', maxW);
+// parts を区切り文字でつなぎ、なるべく1つずつ切れないように折り返す
+function wrapParts(g, its, sep, maxW) {
+  const out = [], w = s => g.measureText(s).width; let cur = '';
+  its.forEach((it, i) => {
+    let piece = it + (i < its.length - 1 ? sep : '');
+    if (cur && w(cur + piece) > maxW) { out.push(cur); cur = ''; }
+    while (piece.length > 1 && w(cur + piece) > maxW) {
+      let k = 1; while (k < piece.length && w(cur + piece.slice(0, k + 1)) <= maxW) k++;
+      out.push(cur + piece.slice(0, k)); piece = piece.slice(k); cur = '';
+    }
+    cur += piece;
+  });
+  if (cur) out.push(cur); return out;
+}
+
+$('make').onclick = async () => {
+  const d = $('date').value, list = entriesOf(d);
+  if (!list.length) { $('msg').textContent = 'この日の記録がありません。'; return; }
+  $('msg').textContent = list.some(e => !entryHas(e)) ? '食べたものが未入力の食事があります。画像は作りましたが、先に入力すると見やすくなります。' : '';
+  const FF = '"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif';
+  // 区分ごとの合計は、その区分の最後の食事の下に書く
+  const totalAt = {};
+  list.forEach((e, i) => { if ((e.items || []).length || totalAt[e.kind] != null) totalAt[e.kind] = i; });
+  // 合計：［合計］［カテ1］2.5p ［カテ2］3p 脂質 12.2g（［］はアイコン）
+  const totalGroups = k => { const s = sums(list.filter(e => e.kind === k)); return [[{ t: '合計', b: 'fill' }], [{ t: 'カテ1', b: 'line' }, { t: r1(s.c1) + 'p' }], [{ t: 'カテ2', b: 'line' }, { t: r1(s.c2) + 'p' }], [{ t: '脂質 ' + r1(s.fat) + 'g' }]]; };
+  const totalText = k => totalGroups(k).flat().map(x => x.t).join('');
+  try { await document.fonts.load('700 40px "Zen Maru Gothic"', dotDate(d) + list.map(e => e.kind + entryText(e) + totalText(e.kind) + timeRange(e)).join('') + '0123456789.():・〜（）／写真なし日月火水木金土' + name); } catch (e) {}
+  const W = 1080, P = 44, LX = P + 98, DX = P + 128, PX = P + 166, FW = 340, FH = 255, TH = 46, TX = PX + FW + 30, TW = W - P - TX, LH = 42, PADY = 30, TOP = 118, GAP = 10;
+  const ims = await Promise.all(list.map(e => e.img ? loadImg(e.img) : null));
+  const mg = document.createElement('canvas').getContext('2d'); mg.font = '700 30px ' + FF;
+  // 合計のアイコン行：グループごとに折り返す
+  const BP = 12, SG = 6, GG = 16;
+  const segW = (s, ctx = mg) => ctx.measureText(s.t).width + (s.b ? BP * 2 : 0);
+  const grpW = gr => gr.reduce((a, s) => a + segW(s), 0) + SG * (gr.length - 1);
+  function totalLines(k) {
+    mg.font = '700 28px ' + FF;
+    const out = []; let cur = [], w = 0;
+    totalGroups(k).forEach(gr => { const gw = grpW(gr); if (cur.length && w + GG + gw > TW) { out.push(cur); cur = []; w = 0; } w += (cur.length ? GG : 0) + gw; cur.push(gr); });
+    if (cur.length) out.push(cur);
+    mg.font = '700 30px ' + FF;
+    return out.map((gs, n) => ({ c: 'total', gs, gap: n === 0 }));
+  }
+  // 1行ずつ { t: 文字, c: 'item' | 'what' | 'total' }。順番は 明細 → 合計 → その他
+  const lines = list.map((e, i) => {
+    const its = (e.items || []).slice().sort((a, b) => a.c - b.c), out = [];
+    // 1品ずつ1行。長いときは「（」の前で折り返す
+    its.forEach(it => { const s = tok(it), k = s.lastIndexOf('（'); wrapParts(mg, mg.measureText(s).width > TW ? [s.slice(0, k), s.slice(k)] : [s], '', TW).forEach(t => out.push({ t, c: 'item' })); });
+    if (totalAt[e.kind] === i) out.push(...totalLines(e.kind));
+    if (e.what) wrap(mg, e.what, TW).forEach((t, k) => out.push({ t, c: 'what', gap: k === 0 && out.length > 0 && out[out.length - 1].c === 'total' }));
+    return out;
+  });
+  const textH = ls => ls.reduce((a, l) => a + LH + (l.gap ? GAP : 0), 0);
+  const rowH = list.map((e, i) => PADY * 2 + Math.max(TH + FH, textH(lines[i])));
+  const H = TOP + rowH.reduce((a, b) => a + b, 0) + P;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  const acc = 'hsl(' + hue + ' 68% 68%)', ink = 'hsl(' + hue + ' 20% 36%)', soft = 'hsl(' + hue + ' 50% 88%)';
+  g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+  g.textBaseline = 'alphabetic';
+  g.textAlign = 'left'; g.fillStyle = acc; g.font = '700 36px ' + FF; g.fillText(dotDate(d), P, 80, 640);
+  if (name) { g.textAlign = 'right'; g.fillStyle = ink; g.font = '700 36px ' + FF; g.fillText(name, W - P, 80, 340); }
+  g.fillStyle = acc; g.fillRect(P, 98, W - 2 * P, 4);
+  g.textBaseline = 'middle';
+  let ry = TOP; const rowY = rowH.map(h => { const y = ry; ry += h; return y; });
+  // 時間は写真の上。写真の位置は行の上下中央
+  const tyOf = i => rowY[i] + PADY + Math.round((rowH[i] - 2 * PADY - TH - FH) / 2), fyOf = i => tyOf(i) + TH, dotY = list.map((e, i) => tyOf(i) + 20);
+  g.strokeStyle = soft; g.lineWidth = 4; g.beginPath(); g.moveTo(DX, dotY[0]); g.lineTo(DX, dotY[dotY.length - 1]); g.stroke();
+  for (let i = 0; i < list.length; i++) {
+    const e = list[i], im = ims[i], h = rowH[i], y = rowY[i], fy = fyOf(i);
+    g.textAlign = 'right'; g.fillStyle = ink; g.font = '700 34px ' + FF; g.fillText(e.kind, LX, dotY[i], 100);
+    g.fillStyle = acc; g.beginPath(); g.arc(DX, dotY[i], 11, 0, Math.PI * 2); g.fill();
+    const tr = e.time.replace(/^0/, '') + (e.end ? '〜' + e.end.replace(/^0/, '') : '');
+    g.textAlign = 'left'; g.fillStyle = 'hsl(' + hue + ' 12% 45%)'; g.font = '700 30px ' + FF; g.fillText(tr, PX + 4, dotY[i], FW);
+    if (im) {
+      g.save(); rr(g, PX, fy, FW, FH, 14); g.clip();
+      const s = Math.max(FW / im.width, FH / im.height), dw = im.width * s, dh = im.height * s;
+      g.drawImage(im, PX + (FW - dw) / 2, fy + (FH - dh) / 2, dw, dh); g.restore();
+    } else {
+      g.fillStyle = 'hsl(' + hue + ' 70% 97%)'; rr(g, PX, fy, FW, FH, 14); g.fill();
+      g.textAlign = 'center'; g.fillStyle = 'hsl(' + hue + ' 40% 70%)'; g.font = '700 32px ' + FF; g.fillText('写真なし', PX + FW / 2, fy + FH / 2, FW - 20);
+      g.setLineDash([14, 10]); g.lineWidth = 4; g.strokeStyle = 'hsl(' + hue + ' 55% 82%)'; rr(g, PX + 2, fy + 2, FW - 4, FH - 4, 14); g.stroke(); g.setLineDash([]);
+    }
+    g.textAlign = 'left';
+    let ty = y + PADY + Math.round((h - 2 * PADY - textH(lines[i])) / 2);
+    lines[i].forEach(l => {
+      if (l.gap) { ty += GAP; if (l.c === 'total') { g.strokeStyle = soft; g.lineWidth = 2; g.beginPath(); g.moveTo(TX, ty - GAP / 2 + 2); g.lineTo(TX + TW, ty - GAP / 2 + 2); g.stroke(); } }
+      if (l.c === 'total') {
+        g.font = '700 28px ' + FF; let x = TX; const cy = ty + LH / 2;
+        l.gs.forEach((gr, gi) => {
+          if (gi) x += GG;
+          gr.forEach((s, si) => {
+            if (si) x += SG;
+            const w = segW(s, g);
+            if (s.b) {
+              rr(g, x, cy - 17, w, 34, 17);
+              if (s.b === 'fill') { g.fillStyle = acc; g.fill(); g.fillStyle = '#ffffff'; }
+              else { g.strokeStyle = acc; g.lineWidth = 3; g.stroke(); g.fillStyle = acc; }
+              g.fillText(s.t, x + BP, cy + 1);
+            } else { g.fillStyle = acc; g.fillText(s.t, x, cy + 1); }
+            x += w;
+          });
+        });
+        ty += LH; return;
+      }
+      g.fillStyle = ink; g.font = '700 30px ' + FF;
+      g.fillText(l.t, TX, ty + LH / 2, TW); ty += LH;
+    });
+    if (i < list.length - 1) { g.strokeStyle = '#e8dde2'; g.lineWidth = 2; g.beginPath(); g.moveTo(P, y + h); g.lineTo(W - P, y + h); g.stroke(); }
+  }
+  $('outImg').innerHTML = '';
+  const img = new Image(); img.alt = '1日のまとめ画像'; img.src = c.toDataURL('image/jpeg', 0.85);
+  $('outImg').appendChild(img);
+  await new Promise(r => c.toBlob(b => { blobOut = b; r(); }, 'image/jpeg', 0.85));
+  $('out').hidden = false; $('out').scrollIntoView();
+};
+async function saveBlob(blob, filename) {
+  const file = new File([blob], filename, { type: blob.type });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file] }); return 'shared'; }
+    catch (e) { if (e && e.name === 'AbortError') return 'cancel'; }
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  return 'saved';
+}
+$('saveImg').onclick = async () => {
+  const fallback = '保存できませんでした。画像を長押しして「写真に保存」してください。';
+  if (!blobOut) { $('msg2').textContent = '画像の準備中です。もう一度押してください。'; return; }
+  try {
+    const r = await saveBlob(blobOut, 'meal-' + $('date').value + '.jpg');
+    if (r === 'shared') $('msg2').textContent = '共有メニューから保存・送信できます。';
+    else if (r === 'saved') $('msg2').textContent = '保存しました。チャットワークで送ってください。';
+  } catch (e) { $('msg2').textContent = fallback; }
+};
+const KINDS = ['朝', '昼', '間食', '夜'];
+const bkLast = () => { try { return Number(localStorage.getItem('portionLog.lastBackup')) || 0; } catch (e) { return 0; } };
+async function bkStatus() {
+  const days = Object.keys(data).filter(k => (data[k] || []).length), meals = days.reduce((a, k) => a + data[k].length, 0);
+  let t = '保存している記録: ' + days.length + '日分・' + meals + '食';
+  try { if (navigator.storage && navigator.storage.estimate) { const s = await navigator.storage.estimate(), mb = s.usage / 1048576; if (s.usage != null) t += '（端末の使用量 約' + (mb < 10 ? mb.toFixed(1) : Math.round(mb)) + 'MB）'; } } catch (e) {}
+  const last = bkLast(), dd = Math.floor((Date.now() - last) / 86400000), old = !last || dd > 14;
+  const ago = last ? '最後の書き出し: ' + (dd <= 0 ? '今日' : dd + '日前') : (meals ? 'まだ書き出していません。' : '');
+  $('bkStatus').textContent = t + (ago ? '\n' + ago : '');
+  $('bkStatus').style.color = meals && old ? 'var(--acc)' : '';
+}
+$('bkOut').onclick = async () => {
+  if (!ready) return;
+  const days = Object.keys(data).filter(k => (data[k] || []).length).sort();
+  if (!days.length) { $('bkMsg').textContent = '書き出す記録がありません。'; return; }
+  try {
+    const parts = ['{"app":"portion-log","version":2,"exportedAt":' + JSON.stringify(new Date().toISOString()) + ',"name":' + JSON.stringify(name) + ',"hue":' + JSON.stringify(hue) + ',"portion":' + JSON.stringify(portion) + ',"foods":' + JSON.stringify(foods) + ',"freq":' + JSON.stringify(freq) + ',"days":{'];
+    days.forEach((k, i) => parts.push((i ? ',' : '') + JSON.stringify(k) + ':' + JSON.stringify(data[k])));
+    parts.push('}}');
+    const blob = new Blob(parts, { type: 'application/json' }), n = new Date();
+    const r = await saveBlob(blob, 'portion-log-backup-' + n.getFullYear() + pad(n.getMonth() + 1) + pad(n.getDate()) + '.json');
+    if (r === 'cancel') return;
+    try { localStorage.setItem('portionLog.lastBackup', String(Date.now())); } catch (e) {}
+    $('bkMsg').textContent = (r === 'shared' ? '共有メニューから「ファイルに保存」などを選んで、大切な場所に保存してください。' : '書き出しました。ファイルを、なくさない場所に保管してください。') + '（' + days.length + '日分・' + (blob.size / 1048576).toFixed(1) + 'MB）';
+    bkStatus();
+  } catch (e) { $('bkMsg').textContent = '書き出せませんでした。'; }
+};
+$('bkIn').onclick = () => $('bkFile').click();
+
+$('bkFile').onchange = async ev => {
+  const f = ev.target.files[0]; ev.target.value = ''; if (!f) return;
+  if (!ready) { $('bkMsg').textContent = '読み込み中です。少し待ってからもう一度お試しください。'; return; }
+  let obj;
+  try { obj = JSON.parse(await f.text()); } catch (e) { $('bkMsg').textContent = 'ファイルを読めませんでした。書き出したバックアップファイルを選んでください。'; return; }
+  if (!obj || (obj.app !== 'portion-log' && obj.app !== 'meal-log') || !obj.days || typeof obj.days !== 'object') { $('bkMsg').textContent = 'ポーションログ（または食事ログ）のバックアップファイルではないようです。'; return; }
+  const changed = [], before = {}; let added = 0, skipped = 0, bad = 0;
+  Object.keys(obj.days).forEach(k => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(k) || !Array.isArray(obj.days[k])) { bad++; return; }
+    const cur = data[k] || [], ids = new Set(cur.map(x => x.id)), add = [];
+    obj.days[k].forEach(e => {
+      const img = e && e.img == null ? '' : e && e.img;
+      if (!e || typeof e !== 'object' || typeof e.id !== 'number' || !KINDS.includes(e.kind) || typeof e.what !== 'string' || typeof img !== 'string' || (img && !img.startsWith('data:image/'))) { bad++; return; }
+      if (ids.has(e.id)) { skipped++; return; }
+      const its = Array.isArray(e.items) ? e.items.filter(validFood).map(x => ({ name: x.name, c: x.c, amt: typeof x.amt === 'string' ? x.amt : '', p: x.p, fat: x.c === 2 && typeof x.fat === 'number' ? x.fat : null })) : [];
+      const rec = { id: e.id, kind: e.kind, time: typeof e.time === 'string' ? e.time : '', what: e.what, img };
+      if (typeof e.end === 'string' && /^\d{2}:\d{2}$/.test(e.end)) rec.end = e.end;
+      if (its.length) rec.items = its;
+      ids.add(e.id); add.push(rec);
+    });
+    if (add.length) { if (!(k in before)) before[k] = data[k] ? JSON.stringify(data[k]) : null; data[k] = cur.concat(add); changed.push(k); added += add.length; }
+  });
+  // よく使う食品は名前がないものだけ足す。ポーションは、この端末で未設定のときだけ入れる
+  let fAddN = 0, ptSet = false;
+  if (Array.isArray(obj.foods)) obj.foods.filter(validFood).forEach(f => { if (!findFood(f.name)) { foods.push({ name: f.name.trim(), c: f.c, amt: f.amt || '', p: f.p, fat: f.c === 2 && typeof f.fat === 'number' ? f.fat : null }); fAddN++; } });
+  if (fAddN) { saveFoods(); renderFoods(); }
+  if (!portion && validPortion(obj.portion)) { portion = obj.portion; try { localStorage.setItem(PKEY, JSON.stringify(portion)); } catch (e) {} $('ptCard').hidden = true; ptSet = true; }
+  const extra = (fAddN ? 'よく使う食品を' + fAddN + '件追加しました。' : '') + (ptSet ? 'ポーションの設定を入れました。' : '');
+  if (!changed.length) { if (ptSet) render(); $('bkMsg').textContent = '新しく追加できる記録はありませんでした' + (skipped ? '（すでにある食事 ' + skipped + ' 件）' : '') + '。' + extra; return; }
+  if (!(await save(changed))) {
+    changed.forEach(k => { if (before[k] === null) delete data[k]; else data[k] = JSON.parse(before[k]); });
+    $('bkMsg').textContent = '保存できませんでした。スマホの空き容量を確認してください。'; return;
+  }
+  if (obj.freq && typeof obj.freq === 'object') Object.keys(obj.freq).forEach(it => {
+    const x = obj.freq[it]; if (it === '__proto__' || it === 'constructor' || !x || typeof x.n !== 'number') return;
+    const c = freq[it] || { n: 0, t: 0 }; freq[it] = { n: Math.max(c.n, x.n), t: Math.max(c.t, Number(x.t) || 0) };
+  });
+  saveFreq(); render(); updatePreview();
+  $('bkMsg').textContent = '読み込みました。' + added + '食を追加しました' + (skipped ? '（すでにあった ' + skipped + ' 食は、そのままにしました）' : '') + (bad ? '（読めなかった ' + bad + ' 件は、飛ばしました）' : '') + '。' + extra;
+};
+
+// ---- 食後のお知らせ：食べ終わってから4時間・5時間（夜のあとは出さない）----
+const NOTES = [[240, '【脂肪が燃え始めます！】'], [300, '【まもなく次の食事です】']], NKEY = 'portionLog.noticed';
+let noteTimer = null;
+function endAt(k, e) {
+  const [y, m, d] = k.split('-').map(Number), [h1, m1] = e.time.split(':').map(Number), [h2, m2] = e.end.split(':').map(Number);
+  const t = new Date(y, m - 1, d, h2, m2); if (h2 * 60 + m2 < h1 * 60 + m1) t.setDate(t.getDate() + 1); return t;
+}
+// 今日と昨日の記録で、いちばん最後に食べ始めた食事
+function lastMeal() {
+  const n = new Date(); let best = null;
+  [0, 1].forEach(b => {
+    const x = new Date(n.getFullYear(), n.getMonth(), n.getDate() - b), k = ymd(x.getFullYear(), x.getMonth(), x.getDate());
+    (data[k] || []).forEach(e => { const [h, mi] = e.time.split(':').map(Number), st = new Date(x.getFullYear(), x.getMonth(), x.getDate(), h, mi); if (!best || st > best.st) best = { k, e, st }; });
+  });
+  return best;
+}
+const hm = min => { const h = Math.floor(min / 60), m = min % 60; return (h ? h + '時間' : '') + (m || !h ? m + '分' : ''); };
+function fireNote(id, body) {
+  let seen = {}; try { seen = JSON.parse(localStorage.getItem(NKEY) || '{}'); } catch (e) {}
+  if (seen[id]) return; seen[id] = Date.now();
+  Object.keys(seen).forEach(k => { if (Date.now() - seen[k] > 2 * 86400000) delete seen[k]; });
+  try { localStorage.setItem(NKEY, JSON.stringify(seen)); } catch (e) {}
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const opt = { body, icon: 'icon-192.png', tag: 'portion-log-note' };
+  const sw = 'serviceWorker' in navigator ? navigator.serviceWorker.getRegistration() : Promise.resolve(null);
+  sw.then(r => r ? r.showNotification('ポーションログ', opt) : new Notification('ポーションログ', opt)).catch(() => { try { new Notification('ポーションログ', opt); } catch (e) {} });
+}
+function notifUI() {
+  const b = $('notifOn'), nt = $('notifNote');
+  if (!('Notification' in window)) { b.hidden = true; nt.textContent = 'この開き方では、スマホのお知らせは出せません（iPhoneは、ホーム画面に追加したアプリから開くと使えます）。アプリを開いている間は、ここに表示します。'; return; }
+  const p = Notification.permission;
+  b.hidden = p !== 'default';
+  nt.textContent = p === 'denied' ? 'スマホのお知らせはオフになっています。スマホの設定から、このアプリのお知らせを許可すると出ます。' : p === 'granted' ? 'お知らせは、アプリを開いている間（または開いた直後）に出ます。アプリを閉じている間は出ないことがあります。' : '';
+}
+$('notifOn').onclick = async () => { try { await Notification.requestPermission(); } catch (e) {} notifUI(); };
+function notes() {
+  clearTimeout(noteTimer);
+  const L = lastMeal(), card = $('nextCard');
+  if (!L || !L.e.end || L.e.kind === '夜') { card.hidden = true; return; }
+  const end = endAt(L.k, L.e), el = Math.floor((Date.now() - end) / 60000);
+  if (el < 0 || el >= 420) { card.hidden = true; return; }
+  const who = L.e.kind === '間食' ? '間食' : L.e.kind + 'ごはん';
+  let h;
+  if (el < 240) h = who + 'を食べ終わってから ' + hm(el) + '。<br>あと' + hm(240 - el) + 'で<span class="big">' + NOTES[0][1] + '</span>';
+  else if (el < 300) h = '<span class="big">' + NOTES[0][1] + '</span>' + who + 'を食べ終わってから ' + hm(el) + '。あと' + hm(300 - el) + 'で次の食事の時間です。';
+  else h = '<span class="big">' + NOTES[1][1] + '</span>' + who + 'を食べ終わってから ' + hm(el) + 'たちました。';
+  $('nextTxt').innerHTML = h; card.classList.toggle('now', el >= 240); card.hidden = false; notifUI();
+  NOTES.forEach(([m, t]) => { if (el >= m && el < m + 30) fireNote(L.e.id + '-' + m, t + ' ' + who + 'から' + hm(m) + 'たちました。'); });
+  // 次に表示を変える時刻まで待つ（最大1分ごと）
+  const nextM = NOTES.map(([m]) => m).find(m => m > el), wait = Math.min(60000, nextM != null ? (end.getTime() + nextM * 60000) - Date.now() + 500 : 60000);
+  noteTimer = setTimeout(notes, Math.max(1000, wait));
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && ready) notes(); });
+init();
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
