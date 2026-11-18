@@ -50,14 +50,10 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .item img{width:72px;height:72px;object-fit:cover;border-radius:16px;flex:none}
 .item .noimg{width:72px;height:72px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;border:2px dashed var(--line);color:var(--sub);font-size:12px;text-align:center}
 .item b{display:block}.item span{color:var(--sub);font-size:14px;white-space:pre-line}
-.acts{margin-left:auto;display:flex}.del,.ed{background:none;border:0;color:var(--sub);padding:8px}.ed{border:2px solid var(--acc);background:transparent;color:var(--acc);font-weight:700;border-radius:999px;padding:8px 18px;white-space:nowrap}.ed.todo{background:var(--acc);color:var(--acc-ink)}.link{background:none;border:0;color:var(--acc);text-decoration:underline;font-size:13px;padding:0 4px}.btn.sub{background:transparent;border:2px solid var(--line);color:var(--ink)}.sw{display:flex;gap:12px}.sw button{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0}.sw button.on{border-color:var(--ink)}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal .w{font-size:12px;color:var(--sub)}.cal button{aspect-ratio:1;border:2px solid transparent;border-radius:12px;background:var(--bg);font-size:14px;padding:0}.cal button.has{background:var(--acc);color:var(--acc-ink);font-weight:700}.cal button.sel{border-color:var(--ink)}.cal button.today{text-decoration:underline}.btn.warn{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.acts{margin-left:auto;display:flex}.del,.ed{background:none;border:0;color:var(--sub);padding:8px}.ed{border:2px solid var(--acc);background:transparent;color:var(--acc);font-weight:700;border-radius:999px;padding:8px 18px;white-space:nowrap}.ed.todo{background:var(--acc);color:var(--acc-ink)}.link{background:none;border:0;color:var(--acc);text-decoration:underline;font-size:13px;padding:0 4px}.btn.sub{background:transparent;border:2px solid var(--line);color:var(--ink)}.sw{display:flex;gap:12px}.sw button{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0}.sw button.on{border-color:var(--ink)}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal .w{font-size:12px;color:var(--sub)}.cal button{aspect-ratio:1;border:2px solid transparent;border-radius:12px;background:var(--bg);font-size:14px;padding:0}.cal button.has{background:var(--acc);color:var(--acc-ink);font-weight:700}.cal button.sel{border-color:var(--ink)}.cal button.today{text-decoration:underline}
+.cal button i{display:block;font-style:normal;font-size:11px;line-height:1;margin-top:-2px}.btn.warn{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
 #outImg img{width:100%;border-radius:16px;border:2px solid var(--line)}
 .note{font-size:13px;color:var(--sub);margin:8px 0 0}
-.hrow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:8px 12px;margin-top:8px}
-.hrow.on{border-color:var(--acc);background:var(--acc2)}
-.hrow .th{display:flex;gap:4px}
-.hrow img{width:42px;height:42px;object-fit:cover;border-radius:10px}
-.hrow span{margin-left:auto;color:var(--sub);font-size:13px;white-space:nowrap}
 #formCard.editing{border-color:var(--acc);background:var(--acc2)}
 .ptg{display:grid;grid-template-columns:3em 1fr 1fr;gap:8px;align-items:center;margin-top:10px}
 .ptg .h{font-size:13px;color:var(--sub);text-align:center}.ptg b{color:var(--acc)}
@@ -76,9 +72,46 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 .pg b{display:block;color:var(--acc)}
 .tag{display:inline-block;font-size:13px;border-radius:999px;padding:2px 10px;margin:4px 4px 0 0;border:2px solid var(--line)}
 .tag.ok{background:var(--mint);border-color:var(--mint)}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
+/* 足りない＝青の枠、オーバー＝ぬりつぶしの濃い赤 */
+:root{--under:#2f76b8;--under-bg:#e6f0fa;--over:#c0302b;--over-bg:#c0302b;--over-ink:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--under:#8cc3f2;--under-bg:#22303d;--over:#c4322c;--over-bg:#c4322c;--over-ink:#fff}}
+:root[data-theme="dark"]{--under:#8cc3f2;--under-bg:#22303d;--over:#c4322c;--over-bg:#c4322c;--over-ink:#fff}
+/* カテ1＝赤寄りのピンク、カテ2＝オレンジ（テキストに合わせる）。fill＝ぬり、line＝文字と枠、bg＝うすい下地、ink＝ぬりの上の文字 */
+:root{--c1:hsl(356 75% 72%);--c1-ink:hsl(354 50% 20%);--c1-line:hsl(355 60% 49%);--c1-bg:hsl(355 90% 95%);--c2:hsl(26 88% 70%);--c2-ink:hsl(22 55% 22%);--c2-line:hsl(24 72% 47%);--c2-bg:hsl(30 100% 94%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:hsl(356 62% 70%);--c1-ink:hsl(354 50% 13%);--c1-line:hsl(356 82% 78%);--c1-bg:hsl(355 25% 22%);--c2:hsl(26 70% 66%);--c2-ink:hsl(22 55% 13%);--c2-line:hsl(28 85% 74%);--c2-bg:hsl(24 30% 21%)}}
+:root[data-theme="dark"]{--c1:hsl(356 62% 70%);--c1-ink:hsl(354 50% 13%);--c1-line:hsl(356 82% 78%);--c1-bg:hsl(355 25% 22%);--c2:hsl(26 70% 66%);--c2-ink:hsl(22 55% 13%);--c2-line:hsl(28 85% 74%);--c2-bg:hsl(24 30% 21%)}
+.pills button.c1{border-color:var(--c1);color:var(--c1-line)}
+.pills button.c2{border-color:var(--c2);color:var(--c2-line)}
+.pills button.c1.on{background:var(--c1);border-color:var(--c1);color:var(--c1-ink)}
+.pills button.c2.on{background:var(--c2);border-color:var(--c2);color:var(--c2-ink)}
+.btn.c1{background:var(--c1);color:var(--c1-ink);border:0}
+.btn.c2{background:var(--c2);color:var(--c2-ink);border:0}
+.it .tg.c1{background:var(--c1-bg);color:var(--c1-line)}
+.it .tg.c2{background:var(--c2-bg);color:var(--c2-line)}
+.chip.c1{border-color:var(--c1);background:var(--c1-bg)}
+.chip.c2{border-color:var(--c2);background:var(--c2-bg)}
+.tag.under{border-color:var(--under);color:var(--under);background:var(--under-bg);font-weight:700}
+.tag.over{border-color:var(--over);color:var(--over-ink);background:var(--over-bg);font-weight:700}
 #nextCard{border:2px solid var(--acc)}#nextCard.now{background:var(--acc2)}#nextTxt{margin:0;font-weight:700}#nextTxt .big{display:block;color:var(--acc);font-size:18px}
 .fin{border:2px solid var(--acc);background:var(--acc);color:var(--acc-ink);font-weight:700;border-radius:999px;padding:8px 14px;white-space:nowrap}
 #dayTools summary{color:var(--acc);text-decoration:underline;font-size:13px;cursor:pointer;margin-top:14px;padding:6px 0}
+.prow{display:block;width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:8px 12px;margin-top:8px;font-size:14px;white-space:pre-line}
+.prow b{display:block;color:var(--acc);font-size:13px}
+.draftnote{background:var(--acc2);border-radius:14px;padding:8px 12px;margin:0 0 10px;font-size:13px}
+.look a{margin-right:14px}
+#pc{border:2px solid var(--line);border-radius:16px;padding:8px 12px;margin-top:10px}
+#pc summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--acc);font-weight:700;font-size:14px}
+#pc summary::-webkit-details-marker{display:none}
+#pc summary::after{content:"ひらく";color:var(--acc);font-size:13px;text-decoration:underline}
+#pc[open] summary::after{content:"とじる"}
+.pcin{display:flex;align-items:center;gap:8px}
+.pcin input{flex:1;min-width:0}
+.pcin em{font-style:normal;color:var(--sub);font-size:14px;min-width:1.2em}
+#pcUnits{margin-top:8px}
+#pcUnits button,#pcEatU button{padding:6px 0;font-size:14px}
+.pcres{background:var(--acc2);border-radius:16px;padding:10px 14px;margin-top:12px}
+.pcres b{display:block;font-size:20px;color:var(--acc)}
+.pcres span{font-size:14px}
 </style>
 </head>
 <body>
@@ -130,6 +163,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 
 <section class="card" id="formCard">
   <h2 id="formTitle">食事を記録する</h2>
+  <div class="draftnote" id="draftNote" hidden><span id="draftTxt"></span> <button type="button" class="link" id="draftDel">消す</button></div>
   <label class="pick" for="photo" id="pickLabel">写真を撮る・選ぶ</label>
   <input type="file" id="photo" accept="image/*" hidden>
   <img id="prev" alt="選んだ写真">
@@ -142,13 +176,14 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
     <div><label for="time">食べ始め</label><input type="time" id="time"></div>
     <div><label for="end">食べ終わり</label><input type="time" id="end"></div>
   </div>
-  <button type="button" class="btn sub" id="endNow">今、食べ終わった</button>
+  <button type="button" class="btn sub" id="prevBtn">前と同じ食事を入れる</button>
+  <div id="prevBox" hidden></div>
   <label>カテ1・カテ2</label>
   <div id="itemList"></div>
   <div id="mealProg" class="prog"></div>
   <div class="addbox">
     <label>カテゴリー</label>
-    <div class="pills" id="cats"><button type="button" data-c="1">カテ1</button><button type="button" data-c="2">カテ2</button></div>
+    <div class="pills" id="cats"><button type="button" data-c="1" class="c1">カテ1</button><button type="button" data-c="2" class="c2">カテ2</button></div>
     <label for="fName">食品名</label>
     <input type="text" id="fName" placeholder="ご飯" list="foodNames" autocomplete="off"><datalist id="foodNames"></datalist>
     <div class="g2">
@@ -157,19 +192,42 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
       <div><label for="fP">ポーション</label><div class="unit"><input type="number" id="fP" inputmode="decimal" step="0.1" min="0" placeholder="2.5"><span>p</span></div></div>
       <div id="fFatW"><label for="fFat">脂質</label><div class="unit"><input type="number" id="fFat" inputmode="decimal" step="0.1" min="0" placeholder="4"><span>g</span></div></div>
     </div>
-    <p class="note" id="fHint">kcalを入れると、80kcal＝1pで計算します（0.1p単位で切り上げ。ご飯は0.5p単位）。分からないときは、<a id="mext" href="https://fooddb.mext.go.jp/" target="_blank" rel="noopener">食品成分データベース</a>（広告なし。重さを入れて「重量変更」）か、<a id="slism" href="https://calorie.slism.jp/" target="_blank" rel="noopener">カロリーSlism</a>で調べる</p>
+    <p class="note" id="fHint">kcalを入れると、80kcal＝1pで計算します。</p>
+    <p class="note look">調べる：<a id="mext" href="https://fooddb.mext.go.jp/" target="_blank" rel="noopener">食品成分データベース</a><a id="slism" href="https://calorie.slism.jp/" target="_blank" rel="noopener">カロリーSlism</a></p>
+    <details id="pc">
+  <summary>ポーション計算</summary>
+  <p class="note">商品の栄養成分表示を見て入れてください。1p＝80kcal、0.1p単位（四捨五入）です。</p>
+  <label for="pcBase">表示の量（〇〇あたり）</label>
+  <div class="pcin"><input type="text" id="pcBase" inputmode="decimal" value="100"><input type="text" id="pcUnit" value="g" maxlength="6" aria-label="単位" style="flex:0 0 5.5em"><em>あたり</em></div>
+  <div class="pills" id="pcUnits"><button type="button" data-u="g">g</button><button type="button" data-u="ml">ml</button><button type="button" data-u="袋">袋</button><button type="button" data-u="本">本</button><button type="button" data-u="個">個</button><button type="button" data-u="枚">枚</button></div>
+  <div id="pcUgWrap" hidden>
+    <label for="pcUg" id="pcUgLabel">1袋は何g？（わかれば）</label>
+    <div class="pcin"><input type="text" id="pcUg" inputmode="decimal" placeholder="例：35"><em>g</em></div>
+  </div>
+  <div class="row">
+    <div><label for="pcKcal">カロリー</label><div class="pcin"><input type="text" id="pcKcal" inputmode="decimal" placeholder="400"><em>kcal</em></div></div>
+    <div><label for="pcFat">脂質</label><div class="pcin"><input type="text" id="pcFat" inputmode="decimal" placeholder="20"><em>g</em></div></div>
+  </div>
+  <div class="pcres" id="pcRes1" hidden></div>
+  <label for="pcEat">食べる量</label>
+  <div class="pcin"><input type="text" id="pcEat" inputmode="decimal" placeholder="例：30"><em id="pcEatSuf">g</em></div>
+  <div class="pills" id="pcEatU" hidden style="margin-top:8px"></div>
+  <div class="pcres" id="pcRes2" hidden></div>
+  <button type="button" class="btn" id="pcUse" hidden>この量で記録欄に入れる</button>
+  <button type="button" class="btn sub" id="pcClear">入力を消す</button>
+</details>
     <label class="chk"><input type="checkbox" id="fReg">よく使う食品に登録する</label>
-    <button type="button" class="btn sub" id="fAdd">カテ1に追加</button>
+    <button type="button" class="btn c1" id="fAdd">カテ1に食品を追加</button>
     <p class="note" id="fMsg"></p>
   </div>
-  <label id="favLabel" hidden>よく使う食品（タップで追加）</label>
+  <label id="favLabel" hidden>よく使う食品</label>
   <div id="favs" class="pills" style="flex-wrap:wrap"></div>
   <label for="what">その他（野菜・汁物など。ポーションの計算には入りません）</label>
   <textarea id="what" rows="2" placeholder="サラダ 味噌汁"></textarea>
   <p id="fmtPrev"></p>
-  <label id="chipsLabel" hidden>よく食べるもの（タップで追加）</label>
+  <label id="chipsLabel" hidden>その他でよく使う食品</label>
   <div id="chips"></div>
-  <button class="btn" id="add">この食事を追加</button>
+  <button class="btn" id="add">この食事を保存</button>
   <button class="btn sub" id="quick">写真だけ先に保存</button>
   <button class="btn sub" id="cancel" hidden>やめる</button>
   <button class="btn sub" id="delEntry" hidden>この食事を削除</button>
@@ -201,9 +259,8 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <h2>カレンダー</h2>
   <div class="calhead"><button class="link" id="prevM">‹ 前の月</button><b id="calT"></b><button class="link" id="nextM">次の月 ›</button></div>
   <div class="cal" id="cal"></div>
+  <p class="note">色がついている日は記録がある日、○は朝・昼・夜すべてが目標どおりだった日です。</p>
   <p class="note" id="streak"></p>
-  <h2 style="margin-top:18px">最近の記録（3日分）</h2>
-  <div id="hist"></div>
 </section>
 
 <section class="card" id="foodCard">
@@ -212,7 +269,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <div id="foodList2" style="margin-top:8px"></div>
   <details style="margin-top:8px">
     <summary class="link" style="padding:6px 0;cursor:pointer">食品を登録する</summary>
-    <div class="pills" id="rCats" style="margin-top:8px"><button type="button" data-c="1" class="on">カテ1</button><button type="button" data-c="2">カテ2</button></div>
+    <div class="pills" id="rCats" style="margin-top:8px"><button type="button" data-c="1" class="c1 on">カテ1</button><button type="button" data-c="2" class="c2">カテ2</button></div>
     <label for="rName">食品名</label><input type="text" id="rName" placeholder="納豆">
     <div class="g2">
       <div><label for="rAmt">量</label><input type="text" id="rAmt" placeholder="1パック"></div>
@@ -285,6 +342,7 @@ async function init() {
     if (Array.isArray(f)) foods = f.filter(validFood);
   } catch (e) {}
   ready = true; renderFoods(); render(); updatePreview(); renderItems();
+  await draftRestore();
 }
 async function save(changed) {
   if (noStore) return true;
@@ -345,11 +403,9 @@ $('start').onclick = () => {
 
 // ---- ポーション設定（朝・昼・夜 × カテ1・カテ2）----
 const MEALS = ['朝', '昼', '夜'], FAT_MAX = 15, PKEY = 'portionLog.portion';
-const r1 = x => Math.round(x * 10) / 10, r05 = x => Math.round(x * 2) / 2;
-// ポーションの丸め：0.1p単位で切り上げ。ご飯だけは0.5p単位（120g＝2.4p → 2.5p）
-const RICE = /ご飯|ごはん|御飯|ライス|白米|玄米|米飯|雑穀米/;
-const ceil1 = x => Math.ceil(Math.round(x * 1000) / 100) / 10;
-const pRound = (x, name) => RICE.test(name || '') ? r05(x) : ceil1(x);
+const r1 = x => Math.round(x * 10) / 10;
+// ポーションの丸め：0.1p単位で四捨五入（1.25p → 1.3p。ご飯も同じ）
+const pRound = x => Math.round(Math.round(x * 1000) / 100) / 10;
 const num = v => { const s = String(v == null ? '' : v).trim(); if (s === '') return null; const n = Number(s); return isFinite(n) && n >= 0 ? n : NaN; };
 function validPortion(p) { return !!p && typeof p === 'object' && MEALS.every(k => Array.isArray(p[k]) && p[k].length === 2 && p[k].every(x => typeof x === 'number' && isFinite(x) && x >= 0)); }
 let portion = null;
@@ -402,7 +458,7 @@ function renderFoods() {
   foods.forEach(f => { const o = document.createElement('option'); o.value = f.name; $('foodNames').appendChild(o); });
   $('favs').innerHTML = ''; $('favLabel').hidden = !foods.length;
   foods.forEach(f => {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = f.name;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip c' + (f.c === 2 ? 2 : 1); b.textContent = f.name;
     b.onclick = () => { fItems.push({ name: f.name, c: f.c, amt: f.amt || '', p: f.p, fat: f.c === 2 ? (f.fat == null ? null : f.fat) : null }); renderItems(); };
     $('favs').appendChild(b);
   });
@@ -410,27 +466,36 @@ function renderFoods() {
   foods.forEach((f, i) => {
     const r = document.createElement('div'); r.className = 'it';
     r.innerHTML = '<span class="tg"></span><span class="tx"></span><button type="button" class="x" aria-label="削除">×</button>';
-    r.querySelector('.tg').textContent = 'カテ' + f.c; r.querySelector('.tx').textContent = tok(f);
+    r.querySelector('.tg').textContent = 'カテ' + f.c; r.querySelector('.tg').classList.add('c' + f.c); r.querySelector('.tx').textContent = tok(f);
     r.querySelector('.x').onclick = () => { foods.splice(i, 1); saveFoods(); renderFoods(); };
     L.appendChild(r);
   });
 }
-// 1品の表記：ご飯（2.5p）　ささみ（1.5p／脂質:0.3g）。量は書かない
-function tok(it) { return it.name + '（' + r1(it.p) + 'p' + (it.c === 2 && it.fat != null ? '／脂質:' + r1(it.fat) + 'g' : '') + '）'; }
+// 1品の表記：ご飯 120g（2.4p）　ささみ 100g（1.5p／脂質:0.3g）。量が空なら名前だけ
+function tok(it) { return it.name + (it.amt ? ' ' + it.amt : '') + '（' + r1(it.p) + 'p' + (it.c === 2 && it.fat != null ? '／脂質:' + r1(it.fat) + 'g' : '') + '）'; }
 function sums(list) {
   const s = { c1: 0, c2: 0, fat: 0, n: 0 };
   list.forEach(e => (e.items || []).forEach(it => { s.n++; if (it.c === 1) s.c1 += it.p; else { s.c2 += it.p; s.fat += it.fat || 0; } }));
   return s;
 }
-function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['ng', 'あと' + r1(-d) + 'p'] : ['ng', r1(d) + 'p多い']; }
+function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['under', 'あと' + r1(-d) + 'p'] : ['over', r1(d) + 'p多い']; }
 function progHTML(k, s) {
   const tag = (cls, t) => '<span class="tag ' + cls + '">' + t + '</span>';
   let h = '';
   if (portion && portion[k]) {
     [[s.c1, portion[k][0], 'カテ1'], [s.c2, portion[k][1], 'カテ2']].forEach(([v, t, lb]) => { const [cl, tx] = judge(v, t); h += tag(cl, lb + ' ' + r1(v) + ' / ' + r1(t) + 'p ' + tx); });
   } else h += tag('', 'カテ1 ' + r1(s.c1) + 'p') + tag('', 'カテ2 ' + r1(s.c2) + 'p');
-  h += tag(s.fat > FAT_MAX ? 'ng' : 'ok', '脂質 ' + r1(s.fat) + ' / ' + FAT_MAX + 'g' + (s.fat > FAT_MAX ? ' オーバー' : ''));
+  h += tag(s.fat > FAT_MAX ? 'over' : 'ok', '脂質 ' + r1(s.fat) + ' / ' + FAT_MAX + 'g' + (s.fat > FAT_MAX ? ' オーバー' : ''));
   return h;
+}
+// 朝・昼・夜がすべて記録されていて、どれもカテ1・カテ2が目標どおり、脂質15g以下の日（間食は見ない）
+function dayGoal(k) {
+  if (!portion) return false;
+  const list = data[k] || [];
+  return MEALS.every(m => {
+    const es = list.filter(e => e.kind === m), s = sums(es);
+    return s.n > 0 && judge(s.c1, portion[m][0])[0] === 'ok' && judge(s.c2, portion[m][1])[0] === 'ok' && s.fat <= FAT_MAX;
+  });
 }
 function minutes(a, b) { if (!a || !b) return null; const [h1, m1] = a.split(':').map(Number), [h2, m2] = b.split(':').map(Number); let d = h2 * 60 + m2 - h1 * 60 - m1; if (d < 0) d += 1440; return d; }
 $('rename').onclick = () => { $('who').value = name; pick = hue; markSw(); $('start').textContent = '変更する'; $('setup').hidden = false; $('who').focus(); };
@@ -505,7 +570,7 @@ $('rmPhoto').onclick = () => { photo = null; $('photo').value = ''; syncPhotoUI(
 let fItems = [], fCat = 1, rCat = 1;
 function markCat() {
   document.querySelectorAll('#cats button').forEach(b => b.classList.toggle('on', Number(b.dataset.c) === fCat));
-  $('fFatW').style.visibility = fCat === 2 ? '' : 'hidden'; $('fAdd').textContent = 'カテ' + fCat + 'に追加';
+  $('fFatW').style.visibility = fCat === 2 ? '' : 'hidden'; $('fAdd').textContent = 'カテ' + fCat + 'に食品を追加'; $('fAdd').className = 'btn c' + fCat;
 }
 document.querySelectorAll('#cats button').forEach(b => b.onclick = () => { fCat = Number(b.dataset.c); markCat(); });
 function markRCat() {
@@ -556,15 +621,15 @@ $('rAdd').onclick = () => {
   $('rMsg').textContent = '「' + name + '」を登録しました。';
 };
 function renderItems() {
-  const L = $('itemList'); L.innerHTML = fItems.length ? '' : '<p class="note" style="margin:0">下の「カテ1に追加」か、よく使う食品から入れてください。</p>';
+  const L = $('itemList'); L.innerHTML = fItems.length ? '' : '<p class="note" style="margin:0">下の「カテ1に食品を追加」か、よく使う食品から入れてください。</p>';
   fItems.slice().sort((a, b) => a.c - b.c).forEach(it => {
     const r = document.createElement('div'); r.className = 'it';
     r.innerHTML = '<span class="tg"></span><button type="button" class="tx"></button><button type="button" class="x" aria-label="削除">×</button>';
-    r.querySelector('.tg').textContent = 'カテ' + it.c; r.querySelector('.tx').textContent = tok(it);
+    r.querySelector('.tg').textContent = 'カテ' + it.c; r.querySelector('.tg').classList.add('c' + it.c); r.querySelector('.tx').textContent = tok(it);
     r.querySelector('.tx').onclick = () => { // タップで直す：入力欄に戻す
       fItems.splice(fItems.indexOf(it), 1);
       fCat = it.c; markCat(); $('fName').value = it.name; $('fAmt').value = it.amt || ''; $('fKcal').value = ''; $('fP').value = it.p; $('fFat').value = it.fat == null ? '' : it.fat;
-      $('fMsg').textContent = '直したら「カテ' + it.c + 'に追加」を押してください。'; slismLink(); renderItems(); $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $('fMsg').textContent = '直したら「カテ' + it.c + 'に食品を追加」を押してください。'; slismLink(); renderItems(); $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     r.querySelector('.x').onclick = () => { fItems.splice(fItems.indexOf(it), 1); renderItems(); };
     L.appendChild(r);
@@ -578,20 +643,24 @@ function updateMealProg() {
   const s = sums(others.concat([{ items: fItems }]));
   $('mealProg').innerHTML = s.n ? '<div class="pg"><b>' + kind + 'のポーション' + (others.length ? '（この日の' + kind + 'の記録を合わせて）' : '') + '</b>' + progHTML(kind, s) + '</div>' : '';
 }
-$('endNow').onclick = () => { const n = new Date(); $('end').value = pad(n.getHours()) + ':' + pad(n.getMinutes()); };
 function resetForm() {
   editId = null; $('msg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
   $('what').value = ''; $('end').value = ''; fItems = []; clearAdd(); syncPhotoUI(); updatePreview();
-  $('add').textContent = 'この食事を追加'; $('cancel').hidden = true;
-  setNow(); renderItems();
+  $('add').textContent = 'この食事を保存'; $('cancel').hidden = true;
+  setNow(); renderItems(); draftClear(); $('prevBox').hidden = true; $('prevBtn').textContent = '前と同じ食事を入れる';
 }
 $('cancel').onclick = resetForm;
 function startEdit(e) {
+  if (editId === e.id) { $('formCard').scrollIntoView({ behavior: 'smooth' }); return; }
+  if (!leaveOk()) return;
+  editInner(e, true);
+}
+function editInner(e, scroll) {
   editId = e.id; $('formTitle').textContent = '修正中：' + e.kind + ' ' + jpTime(e.time); $('formCard').classList.add('editing'); $('quick').hidden = true; $('delEntry').hidden = false; armDel(false); photo = e.img; kind = e.kind; mark();
   $('time').value = e.time; $('end').value = e.end || ''; $('what').value = e.what;
   fItems = (e.items || []).map(x => ({ ...x })); clearAdd(); renderItems(); syncPhotoUI(); updatePreview();
   $('add').textContent = '変更を保存'; $('cancel').hidden = false;
-  $('formCard').scrollIntoView({ behavior: 'smooth' });
+  if (scroll) $('formCard').scrollIntoView({ behavior: 'smooth' });
 }
 
 function jpTime(t) { const [h, m] = t.split(':').map(Number); return m === 0 ? h + '時' : m === 30 ? h + '時半' : h + '時' + m + '分'; }
@@ -604,6 +673,7 @@ function entriesOf(d) { return (data[d] || []).slice().sort((a, b) => a.time.loc
 
 function render() {
   const d = $('date').value, list = entriesOf(d);
+  shownDate = d;
   $('list').innerHTML = list.length ? '' : '<p class="note">この日はまだ記録がありません。</p>';
   $('dayTools').hidden = !list.length; $('dayTools').open = false; $('moveTo').value = d; armDay(false); bkStatus();
   const isToday = d === ymd(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -634,18 +704,6 @@ function render() {
   $('dayProg').innerHTML = (portion ? '' : '<p class="note">「ポーションを変更」から、朝・昼・夜のポーションを入れると、目標に届いたかが分かります。</p>') +
     kinds.map(k => { const es = list.filter(e => e.kind === k), s = sums(es); return '<div class="pg"><b>' + k + (es.length ? '' : '（まだ記録がありません）') + '</b>' + (es.length ? progHTML(k, s) : '') + '</div>'; }).join('');
   updateMealProg(); notes();
-  const days = Object.keys(data).filter(k => data[k].length).sort().reverse().slice(0, 3);
-  $('hist').innerHTML = days.length ? '' : '<p class="note">記録するとここに日ごとに並びます。</p>';
-  days.forEach(k => {
-    const b = document.createElement('button'); b.className = 'hrow' + (k === d ? ' on' : '');
-    const th = document.createElement('div'); th.className = 'th';
-    entriesOf(k).filter(e => e.img).slice(0, 3).forEach(e => { const i = document.createElement('img'); i.alt = ''; i.src = e.img; th.appendChild(i); });
-    const t = document.createElement('b'); t.textContent = jpDate(k);
-    const n = document.createElement('span'); n.textContent = data[k].length + '食';
-    b.append(th, t, n);
-    b.onclick = () => { $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-    $('hist').appendChild(b);
-  });
   renderCal();
 }
 
@@ -662,9 +720,10 @@ function renderCal() {
     const k = ymd(cal.y, cal.m, d), b = document.createElement('button');
     b.type = 'button'; b.textContent = d;
     if ((data[k] || []).length) b.classList.add('has');
+    if (dayGoal(k)) { const o = document.createElement('i'); o.textContent = '○'; b.appendChild(o); b.setAttribute('aria-label', d + '日 目標どおり'); }
     if (k === sel) b.classList.add('sel');
     if (k === today) b.classList.add('today');
-    b.onclick = () => { $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    b.onclick = () => { if (k !== $('date').value && !leaveOk()) return; $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
     el.appendChild(b);
   }
   const t = new Date(now.getFullYear(), now.getMonth(), now.getDate()), has = x => (data[ymd(x.getFullYear(), x.getMonth(), x.getDate())] || []).length;
@@ -674,7 +733,14 @@ function renderCal() {
 }
 $('prevM').onclick = () => { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } renderCal(); };
 $('nextM').onclick = () => { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); };
-$('date').onchange = () => { $('out').hidden = true; resetForm(); render(); };
+// 日付欄は、変わったあとで呼ばれるので、やめたときは前の日付に戻す
+let shownDate = $('date').value;
+$('date').onfocus = () => { shownDate = $('date').value; };
+$('date').onchange = () => {
+  if (!$('date').value) { $('date').value = shownDate; return; }
+  if (!leaveOk()) { $('date').value = shownDate; return; }
+  shownDate = $('date').value; $('out').hidden = true; resetForm(); render();
+};
 
 const EXIFTEST = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAABAAIDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD50ooor8MP9Uz/2Q==';
 let exifApplied = null;
@@ -721,7 +787,7 @@ function shrink(file) {
 $('photo').onchange = async ev => {
   const f = ev.target.files[0]; if (!f) return;
   if (!editId) setNow();
-  try { photo = await shrink(f); syncPhotoUI(); }
+  try { photo = await shrink(f); syncPhotoUI(); draftSoon(); }
   catch (e) { $('msg').textContent = '写真を読み込めませんでした。'; }
 };
 function rotate(src) {
@@ -737,7 +803,7 @@ function rotate(src) {
 }
 $('rot').onclick = async () => {
   if (!photo) return;
-  try { photo = await rotate(photo); $('prev').src = photo; } catch (e) { $('msg').textContent = '回転できませんでした。'; }
+  try { photo = await rotate(photo); $('prev').src = photo; draftSoon(); } catch (e) { $('msg').textContent = '回転できませんでした。'; }
 };
 let dayArmed = false;
 function armDay(on) {
@@ -784,7 +850,7 @@ function gapText(d, k) {
   return '\n' + k + 'のポーション：' + part.join('、');
 }
 async function commitInner(needText) {
-  // 食品名が入ったまま「カテ○に追加」していないとき：入れられれば追加、入れられなければ「その他」に書いて、食事は保存する
+  // 食品名が入ったまま「カテ○に食品を追加」していないとき：入れられれば追加、入れられなければ「その他」に書いて、食事は保存する
   let note = '';
   const pend = $('fName').value.trim();
   if (pend && !fItems.some(x => x.name === pend)) {
@@ -807,8 +873,112 @@ async function commitInner(needText) {
   $('msg').textContent = (wasEdit ? '変更を保存しました。' : hadText ? '追加しました。' : '写真を保存しました。あとで「入力」を押すと、食べたものを書き込めます。') + note + gapText(d, rec.kind);
   $('list').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+// ---- 前と同じ食事を入れる：同じ区分の、前の食事の食品と「その他」を入れる（入れたあとで直せる）----
+function prevMeals() {
+  const out = [], seen = new Set();
+  Object.keys(data).sort().reverse().forEach(d => entriesOf(d).reverse().forEach(e => {
+    if (out.length >= 5 || e.kind !== kind || e.id === editId || !entryHas(e)) return;
+    const t = entryText(e); if (seen.has(t)) return;
+    seen.add(t); out.push({ d, e, t });
+  }));
+  return out;
+}
+function renderPrev() {
+  const box = $('prevBox'), list = prevMeals();
+  box.innerHTML = list.length ? '<p class="note" style="margin:4px 0 0">入れたい食事を選んでください（最近の5つ）。</p>' : '<p class="note" style="margin:4px 0 0">まだ前の' + kind + 'の記録がありません。</p>';
+  list.forEach(({ d, e, t }) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'prow';
+    const h = document.createElement('b'); h.textContent = jpDate(d) + ' ' + e.kind + ' ' + jpTime(e.time);
+    b.append(h, document.createTextNode(t));
+    b.onclick = () => {
+      if ((fItems.length || $('what').value.trim()) && !confirm('入力中の食品とその他を、この食事の内容に入れ替えますか？')) return;
+      fItems = (e.items || []).map(x => ({ ...x })); $('what').value = e.what || '';
+      box.hidden = true; $('prevBtn').textContent = '前と同じ食事を入れる';
+      renderItems(); updatePreview();
+      $('fMsg').textContent = jpDate(d) + 'の' + e.kind + 'の食品を入れました。違うところは、食品をタップして直すか、×で消してください。';
+      $('itemList').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    box.appendChild(b);
+  });
+}
+$('prevBtn').onclick = () => {
+  const box = $('prevBox'); box.hidden = !box.hidden;
+  $('prevBtn').textContent = box.hidden ? '前と同じ食事を入れる' : 'とじる';
+  if (!box.hidden) renderPrev();
+};
+document.querySelectorAll('#kinds button').forEach(b => b.addEventListener('click', () => { if (!$('prevBox').hidden) renderPrev(); }));
 $('add').onclick = () => commit(!editId);
 $('quick').onclick = () => commit(false);
+
+// ---- 書きかけの記録（「この食事を保存」を押す前の入力）を、自動でスマホに残す ----
+const DKEY = 'portionLog.draft';
+let draftOn = false, draftTimer = null, draftLast = '';
+// 残す価値のある入力があるか（区分や時間だけなら、残さない）
+function formDirty() {
+  return !!(editId || photo || fItems.length || $('what').value.trim() || ['fName', 'fKcal', 'fP'].some(i => $(i).value.trim()));
+}
+function draftNow() {
+  if (!formDirty()) return null;
+  return {
+    v: 1, at: Date.now(), date: $('date').value, editId, kind, time: $('time').value, end: $('end').value, what: $('what').value, photo: photo || '',
+    items: fItems.map(x => ({ ...x })),
+    add: { c: fCat, name: $('fName').value, amt: $('fAmt').value, kcal: $('fKcal').value, p: $('fP').value, fat: $('fFat').value }
+  };
+}
+async function draftWrite(d) {
+  if (noStore) return;
+  try {
+    if (db) { const tx = db.transaction('meta', 'readwrite'), st = tx.objectStore('meta'); if (d) st.put(d, 'draft'); else st.delete('draft'); await idbDone(tx); }
+    else if (d) localStorage.setItem(DKEY, JSON.stringify(d)); else localStorage.removeItem(DKEY);
+  } catch (e) {}
+}
+function draftFlush() {
+  clearTimeout(draftTimer); draftTimer = null;
+  if (!draftOn) return;
+  const d = draftNow(), s = d ? JSON.stringify({ ...d, at: 0 }) : '';
+  if (s === draftLast) return;
+  draftLast = s; draftWrite(d);
+}
+function draftSoon() { if (!draftOn) return; clearTimeout(draftTimer); draftTimer = setTimeout(draftFlush, 400); }
+function draftClear() { clearTimeout(draftTimer); draftTimer = null; draftLast = ''; $('draftNote').hidden = true; if (draftOn) draftWrite(null); }
+['input', 'change', 'click'].forEach(t => document.addEventListener(t, draftSoon));
+document.addEventListener('visibilitychange', () => { if (document.hidden) draftFlush(); });
+window.addEventListener('pagehide', draftFlush);
+// 日付を変える・別の記録を直すときに、書きかけが消えてしまう前に聞く
+function leaveOk() {
+  if (!formDirty()) return true;
+  if (!confirm((editId ? '修正中の記録' : '書きかけの記録') + 'があります。保存せずに消してよいですか？')) return false;
+  draftClear(); return true;
+}
+async function draftRestore() {
+  let d = null;
+  try {
+    if (db) d = await idbReq(db.transaction('meta').objectStore('meta').get('draft'));
+    else if (!noStore) d = JSON.parse(localStorage.getItem(DKEY) || 'null');
+  } catch (e) { d = null; }
+  if (d && typeof d === 'object' && /^\d{4}-\d{2}-\d{2}$/.test(d.date || '')) {
+    const e = d.editId ? (data[d.date] || []).find(x => x.id === d.editId) : null;
+    $('date').value = d.date; const [y, m] = d.date.split('-').map(Number); cal.y = y; cal.m = m - 1;
+    render();
+    if (e) editInner(e, false);
+    kind = ['朝', '昼', '間食', '夜'].includes(d.kind) ? d.kind : kind; mark();
+    if (typeof d.time === 'string' && d.time) $('time').value = d.time;
+    $('end').value = typeof d.end === 'string' ? d.end : '';
+    $('what').value = typeof d.what === 'string' ? d.what : '';
+    photo = typeof d.photo === 'string' && d.photo.startsWith('data:image/') ? d.photo : null;
+    fItems = Array.isArray(d.items) ? d.items.filter(x => x && typeof x.name === 'string' && typeof x.p === 'number').map(x => ({ ...x })) : [];
+    const a = d.add || {};
+    fCat = a.c === 2 ? 2 : 1; markCat();
+    [['fName', a.name], ['fAmt', a.amt], ['fKcal', a.kcal], ['fP', a.p], ['fFat', a.fat]].forEach(([i, v]) => { $(i).value = v == null ? '' : String(v); });
+    syncPhotoUI(); updatePreview(); slismLink(); renderItems();
+    const t = new Date(Number(d.at) || Date.now());
+    $('draftTxt').textContent = (e ? '修正中だった記録' : '書きかけの記録') + '（' + jpDate(d.date) + ' ' + kind + '、' + (t.getMonth() + 1) + '/' + t.getDate() + ' ' + pad(t.getHours()) + ':' + pad(t.getMinutes()) + 'まで入力）を戻しました。';
+    $('draftNote').hidden = false;
+    draftLast = JSON.stringify({ ...draftNow(), at: 0 });
+  }
+  draftOn = true;
+}
+$('draftDel').onclick = () => { resetForm(); render(); };
 
 const loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.src = src; });
 function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
@@ -837,24 +1007,31 @@ $('make').onclick = async () => {
   // 区分ごとの合計は、その区分の最後の食事の下に書く
   const totalAt = {};
   list.forEach((e, i) => { if ((e.items || []).length || totalAt[e.kind] != null) totalAt[e.kind] = i; });
-  // 合計：［合計］［カテ1］2.5p ［カテ2］3p 脂質 12.2g（［］はアイコン）
-  const totalGroups = k => { const s = sums(list.filter(e => e.kind === k)); return [[{ t: '合計', b: 'fill' }], [{ t: 'カテ1', b: 'line' }, { t: r1(s.c1) + 'p' }], [{ t: 'カテ2', b: 'line' }, { t: r1(s.c2) + 'p' }], [{ t: '脂質 ' + r1(s.fat) + 'g' }]]; };
-  const totalText = k => totalGroups(k).flat().map(x => x.t).join('');
+  // 画像のカテの色（白い背景で読みやすい濃さ）
+  const C1 = 'hsl(355 62% 54%)', C2 = 'hsl(24 80% 50%)';
+  // 合計は2行：［合計］［カテ1］2.5p ／ ［カテ2］3p 脂質 12.2g（［］はアイコン）
+  const totalRows = k => { const s = sums(list.filter(e => e.kind === k)); return [[[{ t: '合計', b: 'fill' }], [{ t: 'カテ1', b: 'line', col: C1 }, { t: r1(s.c1) + 'p', col: C1 }]], [[{ t: 'カテ2', b: 'line', col: C2 }, { t: r1(s.c2) + 'p', col: C2 }], [{ t: '脂質 ' + r1(s.fat) + 'g', col: C2 }]]]; };
+  const totalText = k => totalRows(k).flat(2).map(x => x.t).join('');
   try { await document.fonts.load('700 40px "Zen Maru Gothic"', dotDate(d) + list.map(e => e.kind + entryText(e) + totalText(e.kind) + timeRange(e)).join('') + '0123456789.():・〜（）／写真なし日月火水木金土' + name); } catch (e) {}
   const W = 1080, P = 44, LX = P + 98, DX = P + 128, PX = P + 166, FW = 340, FH = 255, TH = 46, TX = PX + FW + 30, TW = W - P - TX, LH = 42, PADY = 30, TOP = 118, GAP = 10;
   const ims = await Promise.all(list.map(e => e.img ? loadImg(e.img) : null));
   const mg = document.createElement('canvas').getContext('2d'); mg.font = '700 30px ' + FF;
-  // 合計のアイコン行：グループごとに折り返す
+  // 合計のアイコン行：カテ1の行とカテ2の行に分け、入りきらないときはグループごとに折り返す
   const BP = 12, SG = 6, GG = 16;
   const segW = (s, ctx = mg) => ctx.measureText(s.t).width + (s.b ? BP * 2 : 0);
   const grpW = gr => gr.reduce((a, s) => a + segW(s), 0) + SG * (gr.length - 1);
   function totalLines(k) {
     mg.font = '700 28px ' + FF;
     const out = []; let cur = [], w = 0;
-    totalGroups(k).forEach(gr => { const gw = grpW(gr); if (cur.length && w + GG + gw > TW) { out.push(cur); cur = []; w = 0; } w += (cur.length ? GG : 0) + gw; cur.push(gr); });
-    if (cur.length) out.push(cur);
+    // 2行目（カテ2）は、1行目のカテ1の位置にそろえる
+    const rows = totalRows(k), ind = grpW(rows[0][0]) + GG, outInd = [];
+    rows.forEach((row, ri) => {
+      const base = ri ? ind : 0; w = base;
+      row.forEach(gr => { const gw = grpW(gr); if (cur.length && w + GG + gw > TW) { out.push(cur); outInd.push(base); cur = []; w = base; } w += (cur.length ? GG : 0) + gw; cur.push(gr); });
+      if (cur.length) { out.push(cur); outInd.push(base); } cur = [];
+    });
     mg.font = '700 30px ' + FF;
-    return out.map((gs, n) => ({ c: 'total', gs, gap: n === 0 }));
+    return out.map((gs, n) => ({ c: 'total', gs, gap: n === 0, ind: outInd[n] }));
   }
   // 1行ずつ { t: 文字, c: 'item' | 'what' | 'total' }。順番は 明細 → 合計 → その他
   const lines = list.map((e, i) => {
@@ -901,7 +1078,7 @@ $('make').onclick = async () => {
     lines[i].forEach(l => {
       if (l.gap) { ty += GAP; if (l.c === 'total') { g.strokeStyle = soft; g.lineWidth = 2; g.beginPath(); g.moveTo(TX, ty - GAP / 2 + 2); g.lineTo(TX + TW, ty - GAP / 2 + 2); g.stroke(); } }
       if (l.c === 'total') {
-        g.font = '700 28px ' + FF; let x = TX; const cy = ty + LH / 2;
+        g.font = '700 28px ' + FF; let x = TX + (l.ind || 0); const cy = ty + LH / 2;
         l.gs.forEach((gr, gi) => {
           if (gi) x += GG;
           gr.forEach((s, si) => {
@@ -910,9 +1087,9 @@ $('make').onclick = async () => {
             if (s.b) {
               rr(g, x, cy - 17, w, 34, 17);
               if (s.b === 'fill') { g.fillStyle = acc; g.fill(); g.fillStyle = '#ffffff'; }
-              else { g.strokeStyle = acc; g.lineWidth = 3; g.stroke(); g.fillStyle = acc; }
+              else { g.strokeStyle = s.col || acc; g.lineWidth = 3; g.stroke(); g.fillStyle = s.col || acc; }
               g.fillText(s.t, x + BP, cy + 1);
-            } else { g.fillStyle = acc; g.fillText(s.t, x, cy + 1); }
+            } else { g.fillStyle = s.col || acc; g.fillText(s.t, x, cy + 1); }
             x += w;
           });
         });
@@ -1073,6 +1250,82 @@ function notes() {
   noteTimer = setTimeout(notes, Math.max(1000, wait));
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden && ready) notes(); });
+
+// ポーション計算（1ポーション = 80kcal、0.1p単位で四捨五入）
+(() => {
+  const PK = 80;
+  const num = id => {
+    const s = $(id).value.replace(/[０-９．]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[，,]/g, '.').trim();
+    const v = parseFloat(s);
+    return s && isFinite(v) && v >= 0 ? v : null;
+  };
+  const esc = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+  const fx = (v, d) => String(Math.round(v * 10 ** d) / 10 ** d);
+  let eatU = null; // 食べる量の単位（null = 表示と同じ単位、'g' = グラム）
+  let last = null; // 記録欄に入れるための、食べる量の計算結果
+  function calc() {
+    last = null; $('pcUse').hidden = true;
+    const B = num('pcBase'), K = num('pcKcal'), F = num('pcFat'), E = num('pcEat');
+    const U = $('pcUnit').value.trim() || 'g', isG = U === 'g';
+    const ug = isG ? null : num('pcUg');
+    document.querySelectorAll('#pcUnits button').forEach(b => b.classList.toggle('on', b.dataset.u === U));
+    const needUg = !isG && U !== 'ml';
+    $('pcUgWrap').hidden = !needUg;
+    $('pcUgLabel').textContent = '1' + U + 'は何g？（わかれば）';
+    const canG = needUg && ug > 0;
+    if (!canG) eatU = null;
+    $('pcEatU').hidden = !canG;
+    if (canG) $('pcEatU').innerHTML = '<button type="button" data-u="self" class="' + (eatU ? '' : 'on') + '">' + esc(U) + '</button><button type="button" data-u="g" class="' + (eatU ? 'on' : '') + '">g</button>';
+    $('pcEatSuf').textContent = eatU === 'g' ? 'g' : U;
+    const Uh = esc(U);
+    const r1 = $('pcRes1'), r2 = $('pcRes2');
+    if (!(B > 0 && K > 0)) { r1.hidden = r2.hidden = true; return; }
+    // 1ポーション
+    const pU = PK * B / K;
+    const main = isG || U === 'ml' ? fx(pU, 1) + Uh : fx(pU, 2) + Uh + (ug > 0 ? '（' + fx(pU * ug, 1) + 'g）' : '');
+    r1.innerHTML = '<span>1ポーション（80kcal）は</span><b>' + main + '</b>' + (F != null ? '<span>脂質 ' + fx(F * PK / K, 1) + 'g</span>' : '');
+    r1.hidden = false;
+    // 食べる量 → ポーション数
+    if (E == null) { r2.hidden = true; return; }
+    const eU = eatU === 'g' ? E / ug : E;
+    const kc = eU * K / B, p = pRound(kc / PK);
+    r2.innerHTML = '<span>' + fx(E, 2) + (eatU === 'g' ? 'g' : Uh) + ' 食べると</span><b>' + p.toFixed(1) + 'p</b><span>' + Math.round(kc) + 'kcal' + (F != null ? '／脂質 ' + fx(eU * F / B, 1) + 'g' : '') + '</span>';
+    r2.hidden = false;
+    if (E > 0) {
+      last = { amt: fx(E, 2) + (eatU === 'g' ? 'g' : U), kcal: kc, fat: F != null ? eU * F / B : null };
+      $('pcUse').hidden = false;
+    }
+  }
+  // 計算結果を「食事を記録する」の 量・kcal・ポーション・脂質 に入れる（カテゴリーと食品名は自分で選ぶ）
+  $('pcUse').addEventListener('click', () => {
+    if (!last) return;
+    $('fAmt').value = last.amt;
+    $('fKcal').value = Math.round(last.kcal);
+    $('fP').value = pRound(last.kcal / PK, $('fName').value);
+    $('fFat').value = last.fat == null ? '' : fx(last.fat, 1);
+    $('fMsg').textContent = '計算した量を入れました。食品名とカテゴリーを確かめて「カテ' + fCat + 'に食品を追加」を押してください。';
+    $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  ['pcBase', 'pcUnit', 'pcUg', 'pcKcal', 'pcFat', 'pcEat'].forEach(id => $(id).addEventListener('input', calc));
+  $('pcUnits').addEventListener('click', e => {
+    const u = e.target.dataset && e.target.dataset.u; if (!u) return;
+    $('pcUnit').value = u;
+    if (u !== 'g' && u !== 'ml' && num('pcBase') === 100) $('pcBase').value = '1';
+    if ((u === 'g' || u === 'ml') && num('pcBase') === 1) $('pcBase').value = '100';
+    calc();
+  });
+  $('pcEatU').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    eatU = b.dataset.u === 'g' ? 'g' : null; calc();
+  });
+  $('pcClear').addEventListener('click', () => {
+    $('pcBase').value = '100'; $('pcUnit').value = 'g';
+    ['pcUg', 'pcKcal', 'pcFat', 'pcEat'].forEach(id => $(id).value = '');
+    eatU = null; calc();
+  });
+  calc();
+})();
+
 init();
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 </script>
