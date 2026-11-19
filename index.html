@@ -43,6 +43,11 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 #prev.big{width:100%;aspect-ratio:auto;max-height:70vh;object-fit:contain;background:var(--card);cursor:zoom-out}
 #chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .chip{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 13px;font-size:14px}
+#favs{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+#favs .chip{min-height:44px;padding:0 16px;font-size:15px;font-weight:700;color:var(--ink)}
+#favs .chip.more{border-style:dashed;background:none;color:var(--sub);font-weight:500}
+.fgrp{font-size:12px;font-weight:700;color:var(--sub);margin:10px 0 0}
+#foodList2 .it .tx{flex:1;text-align:left;background:none;border:0;padding:8px 0;color:var(--ink);font-size:15px;min-height:44px}
 #fmtPrev{margin:6px 0 0;color:var(--acc);font-size:13px;font-weight:700;min-height:1.2em}
 #bkStatus{white-space:pre-line}
 .item{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:2px solid var(--line)}
@@ -109,20 +114,25 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 #nextTxt b{color:var(--acc);font-size:17px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 8px 8px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:calc(100% - 32px);font-size:14px;white-space:nowrap}
 .toast[hidden]{display:none}
-.toast button{background:var(--acc);color:var(--acc-ink);border:0;border-radius:999px;padding:10px 16px;font-weight:700;min-height:44px}
+.toast button{background:none;color:var(--bg);border:0;border-radius:999px;padding:10px 12px;font-weight:500;font-size:13px;min-height:44px;text-decoration:underline;opacity:.8}
+#toastTxt{font-size:16px;font-weight:700}
 .lrow{display:flex;align-items:flex-end;justify-content:space-between}
 .lrow .link{min-height:44px;font-size:14px}
 @keyframes flash{0%,40%{background:var(--acc2)}100%{background:transparent}}
 .it.flash{animation:flash 1.6s ease-out;border-radius:10px}
 #fMsg{font-weight:700;color:var(--acc)}
+.drow{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:6px 0;border-top:1px solid var(--line)}
+.drow:first-child{border-top:0}
+.drow b{width:2em;flex:none}
+.drow .tag{margin:0;font-variant-numeric:tabular-nums;font-size:12px;padding:3px 8px;letter-spacing:0}
 .skull{margin-left:2px;font-size:.9em}
 .fin{border:2px solid var(--acc);background:var(--acc);color:var(--acc-ink);font-weight:700;border-radius:999px;padding:8px 14px;white-space:nowrap}
 #dayTools summary{color:var(--acc);text-decoration:underline;font-size:13px;cursor:pointer;margin-top:14px;padding:6px 0}
 .prow{display:block;width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:8px 12px;margin-top:8px;font-size:14px;white-space:pre-line}
 .prow b{display:block;color:var(--acc);font-size:13px}
 .draftnote{background:var(--acc2);border-radius:14px;padding:8px 12px;margin:0 0 10px;font-size:13px}
-.look a{margin-right:14px}
-.calcbtn{border:2px solid var(--acc);background:var(--card);color:var(--acc);font-weight:700;border-radius:999px;padding:2px 12px;font-size:13px;min-height:32px;margin:6px 0 4px}
+.look{display:flex;gap:8px;margin:4px 0 2px}
+.calcbtn{flex:1;display:flex;align-items:center;justify-content:center;border:2px solid var(--acc);background:var(--card);color:var(--acc);font-weight:700;border-radius:999px;padding:0 12px;font-size:14px;min-height:44px;text-decoration:none}
 .sheet{position:fixed;inset:0;z-index:40}
 .sheet[hidden]{display:none}
 .sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.35)}
@@ -135,7 +145,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 .pcin input{flex:1;min-width:0}
 .pcin em{font-style:normal;color:var(--sub);font-size:14px;min-width:1.2em}
 #pcUnits{margin-top:8px}
-#pcUnits button,#pcEatU button{padding:6px 0;font-size:14px}
+#pcUnits button{padding:6px 0;font-size:14px}
 .pcres{background:var(--acc2);border-radius:16px;padding:10px 14px;margin-top:12px}
 .pcres b{display:block;font-size:20px;color:var(--acc)}
 .pcres span{font-size:14px}
@@ -150,7 +160,6 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
     <polygon points="150,6 157,10 157,18 150,22 143,18 143,10" fill="#c9def0"/>
   </svg>
   <h1>ポーションログ</h1>
-  <p class="sub">毎食のポーションを記録して、1枚にまとめよう</p>
   <p class="sub"><span id="hello"></span><button class="link" id="rename" hidden>名前・色を変更</button><button class="link" id="ptEdit" hidden>ポーションを変更</button></p>
 </header>
 
@@ -196,7 +205,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <img id="prev" alt="選んだ写真">
   <button type="button" class="btn sub" id="rot" hidden>写真を左に回転する</button>
   <button type="button" class="btn sub" id="rmPhoto" hidden>写真を外す</button>
-  <p class="note" id="nophoto">写真がなくても大丈夫です。食べたものだけで保存できます。</p>
+  <p class="note" id="nophoto">写真はなくても保存できます</p>
   <label>区分</label>
   <div class="pills" id="kinds"><button data-k="朝">朝</button><button data-k="昼">昼</button><button data-k="夜">夕</button><button data-k="間食">間食<span class="skull" aria-hidden="true">💀</span></button></div>
   <div class="row">
@@ -210,22 +219,22 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <div class="addbox">
     <label>カテゴリー</label>
     <div class="pills" id="cats"><button type="button" data-c="1" class="c1">カテ1</button><button type="button" data-c="2" class="c2">カテ2</button></div>
+    <label id="favLabel" hidden>カテ1のよく使う食品</label>
+    <div id="favs"></div>
     <label for="fName">食品名</label>
     <input type="text" id="fName" placeholder="ご飯" list="foodNames" autocomplete="off"><datalist id="foodNames"></datalist>
     <div class="g2">
       <div><label for="fAmt">量</label><input type="text" id="fAmt" placeholder="120g"></div>
       <div><label for="fKcal">kcal</label><input type="number" id="fKcal" inputmode="decimal" min="0" placeholder="200"></div>
-      <div><div class="lrow"><label for="fP">ポーション</label><button type="button" class="calcbtn" id="pcOpen">計算</button></div><div class="unit"><input type="number" id="fP" inputmode="decimal" step="0.1" min="0" placeholder="2.5"><span>p</span></div></div>
+      <div><label for="fP">ポーション</label><div class="unit"><input type="number" id="fP" inputmode="decimal" step="0.1" min="0" placeholder="2.5"><span>p</span></div></div>
       <div id="fFatW"><label for="fFat">脂質</label><div class="unit"><input type="number" id="fFat" inputmode="decimal" step="0.1" min="0" placeholder="4"><span>g</span></div></div>
     </div>
     <p class="note" id="fHint">kcalを入れると、80kcal＝1pで計算します。</p>
-    <p class="note look">調べる：<a id="mext" href="https://fooddb.mext.go.jp/" target="_blank" rel="noopener">食品成分データベース</a><a id="slism" href="https://calorie.slism.jp/" target="_blank" rel="noopener">カロリーSlism</a></p>
+    <div class="look"><a class="calcbtn" id="slism" href="https://calorie.slism.jp/" target="_blank" rel="noopener">調べる</a><button type="button" class="calcbtn" id="pcOpen">計算する</button></div>
     <label class="chk"><input type="checkbox" id="fReg">よく使う食品に登録する</label>
     <button type="button" class="btn c1" id="fAdd">カテ1に食品を追加</button>
     <p class="note" id="fMsg"></p>
   </div>
-  <label id="favLabel" hidden>よく使う食品</label>
-  <div id="favs" class="pills" style="flex-wrap:wrap"></div>
   <label for="what">その他（野菜・汁物など。ポーションの計算には入りません）</label>
   <textarea id="what" rows="2" placeholder="サラダ 味噌汁"></textarea>
   <p id="fmtPrev"></p>
@@ -240,6 +249,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 <section class="card">
   <h2>この日のポーション</h2>
   <div id="dayProg" style="margin-bottom:14px"></div>
+  <p class="note" id="dayKey" style="margin:-8px 0 14px">数字は いま/目標。緑＝目標どおり、青＝足りない、赤＝オーバー</p>
   <h2>この日の食事</h2>
   <div id="list"></div>
   <button class="btn" id="make">1枚にまとめる</button>
@@ -263,16 +273,20 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <h2>カレンダー</h2>
   <div class="calhead"><button class="link" id="prevM">‹ 前の月</button><b id="calT"></b><button class="link" id="nextM">次の月 ›</button></div>
   <div class="cal" id="cal"></div>
-  <p class="note">色がついている日は記録がある日、○は朝・昼・夜すべてが目標どおりだった日です。</p>
+  <p class="note">色がついている日は記録がある日、○は朝・昼・夕すべてが目標どおりだった日です。</p>
   <p class="note" id="streak"></p>
 </section>
 
 <section class="card" id="foodCard">
   <h2>よく使う食品</h2>
-  <p class="note" style="margin:0">登録しておくと、記録のときにタップするだけで入ります。量を「50g」のようにgで登録すると、記録で「120g」と入れたときにポーションを計算します。</p>
-  <div id="foodList2" style="margin-top:8px"></div>
-  <details style="margin-top:8px">
-    <summary class="link" style="padding:6px 0;cursor:pointer">食品を登録する</summary>
+  <p class="note" style="margin:0">量を「50g」のようにgで登録すると、記録した量に合わせて計算します</p>
+  <details id="foodMgr" style="margin-top:8px">
+    <summary class="link" id="foodMgrT" style="padding:6px 0;cursor:pointer">登録した食品を見る・直す</summary>
+    <input type="search" id="fSearch" placeholder="さがす（例：ご）" style="margin-top:8px">
+    <div id="foodList2" style="margin-top:4px"></div>
+  </details>
+  <details id="foodReg" style="margin-top:8px">
+    <summary class="link" id="foodRegT" style="padding:6px 0;cursor:pointer">食品を登録する</summary>
     <div class="pills" id="rCats" style="margin-top:8px"><button type="button" data-c="1" class="c1 on">カテ1</button><button type="button" data-c="2" class="c2">カテ2</button></div>
     <label for="rName">食品名</label><input type="text" id="rName" placeholder="納豆">
     <div class="g2">
@@ -282,6 +296,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
       <div id="rFatW"><label for="rFat">脂質</label><div class="unit"><input type="number" id="rFat" inputmode="decimal" step="0.1" min="0" placeholder="4"><span>g</span></div></div>
     </div>
     <button type="button" class="btn sub" id="rAdd">登録する</button>
+    <button type="button" class="btn sub" id="rCancel" hidden>やめる</button>
     <p class="note" id="rMsg"></p>
   </details>
 </section>
@@ -300,14 +315,10 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <div class="sheet-bg" id="pcBg"></div>
   <div class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="pcTitle">
     <div class="sheet-head"><h2 id="pcTitle">ポーション計算</h2><button type="button" class="link" id="pcClear">リセット</button><button type="button" class="sheet-x" id="pcClose" aria-label="閉じる">×</button></div>
-    <p class="note" style="margin:0">商品の栄養成分表示を見て入れてください。1p＝80kcal、0.1p単位（四捨五入）。</p>
+    <p class="note" style="margin:0">商品の栄養成分表示を見て入れてください。1p＝80kcal、0.1p単位（四捨五入）。「1袋（60g）あたり」の表示なら、gで食べる量を入れたいときは「60 g あたり」と入れます。</p>
     <label for="pcBase">表示の量（〇〇あたり）</label>
     <div class="pcin"><input type="text" id="pcBase" inputmode="decimal" value="100"><input type="text" id="pcUnit" value="g" maxlength="6" aria-label="単位" style="flex:0 0 5.5em"><em>あたり</em></div>
     <div class="pills" id="pcUnits"><button type="button" data-u="g">g</button><button type="button" data-u="ml">ml</button><button type="button" data-u="袋">袋</button><button type="button" data-u="本">本</button><button type="button" data-u="個">個</button><button type="button" data-u="枚">枚</button></div>
-    <div id="pcUgWrap" hidden>
-      <label for="pcUg" id="pcUgLabel">1袋は何g？（わかれば）</label>
-      <div class="pcin"><input type="text" id="pcUg" inputmode="decimal" placeholder="例：35"><em>g</em></div>
-    </div>
     <div class="row">
       <div><label for="pcKcal">カロリー</label><div class="pcin"><input type="text" id="pcKcal" inputmode="decimal" placeholder="400"><em>kcal</em></div></div>
       <div><label for="pcFat">脂質</label><div class="pcin"><input type="text" id="pcFat" inputmode="decimal" placeholder="20"><em>g</em></div></div>
@@ -317,7 +328,6 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
     <div id="pcEatWrap">
       <label for="pcEat">食べる量</label>
       <div class="pcin"><input type="text" id="pcEat" inputmode="decimal" placeholder="例：30"><em id="pcEatSuf">g</em></div>
-      <div class="pills" id="pcEatU" hidden style="margin-top:8px"></div>
     </div>
     <div id="pcWantWrap" hidden>
       <label for="pcWant">食べたいポーション</label>
@@ -491,32 +501,80 @@ async function saveFoods() {
 function validFood(f) { return f && typeof f.name === 'string' && f.name.trim() && (f.c === 1 || f.c === 2) && typeof f.p === 'number' && isFinite(f.p) && f.p >= 0 && (f.fat == null || (typeof f.fat === 'number' && isFinite(f.fat))) && (f.amt == null || typeof f.amt === 'string'); }
 function upsertFood(f) {
   const i = foods.findIndex(x => x.name === f.name);
-  if (i >= 0) foods[i] = f; else foods.push(f);
+  if (i >= 0) foods[i] = { ...f, n: foods[i].n || 0, t: foods[i].t || Date.now() }; else foods.push({ ...f, n: 0, t: Date.now() });
   saveFoods(); renderFoods();
 }
-function renderFoods() {
-  $('foodNames').innerHTML = '';
-  foods.forEach(f => { const o = document.createElement('option'); o.value = f.name; $('foodNames').appendChild(o); });
-  $('favs').innerHTML = ''; $('favLabel').hidden = !foods.length;
-  foods.forEach(f => {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip c' + (f.c === 2 ? 2 : 1); b.textContent = f.name;
+// 記録に追加したら、使った回数を数える
+function countFood(name) { const f = findFood(name); if (f) { f.n = (f.n || 0) + 1; f.t = Date.now(); saveFoods(); renderFavs(); } }
+// 並び：登録して7日以内でまだ使っていないもの → 使った回数の多い順 → 最近使った順
+const WEEK = 7 * 864e5;
+const isNew = f => !f.n && f.t && Date.now() - f.t < WEEK;
+const favOrder = (a, b) => (isNew(b) - isNew(a)) || ((b.n || 0) - (a.n || 0)) || ((b.t || 0) - (a.t || 0));
+const FAV_N = 5;
+let favAll = false, favCat = 1;
+function renderFavs() {
+  if (favCat !== fCat) { favCat = fCat; favAll = false; }
+  const list = foods.filter(f => f.c === fCat).sort(favOrder);
+  $('favs').innerHTML = ''; $('favLabel').hidden = !list.length; $('favLabel').textContent = 'カテ' + fCat + 'のよく使う食品';
+  (favAll ? list : list.slice(0, FAV_N)).forEach(f => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip c' + f.c; b.textContent = f.name;
     b.onclick = () => {
-      fCat = f.c === 2 ? 2 : 1; markCat();
       $('fName').value = f.name; $('fAmt').value = f.amt || ''; $('fKcal').value = ''; $('fP').value = f.p; $('fFat').value = f.c === 2 && f.fat != null ? f.fat : '';
-      slismLink(); $('fMsg').textContent = '入力欄に入れました。量を変えたら「カテ' + fCat + 'に食品を追加」';
+      slismLink(); $('fMsg').textContent = '入力欄に入れました';
       $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     $('favs').appendChild(b);
   });
-  const L = $('foodList2'); L.innerHTML = foods.length ? '' : '<p class="note">まだ登録はありません。</p>';
-  foods.forEach((f, i) => {
-    const r = document.createElement('div'); r.className = 'it';
-    r.innerHTML = '<span class="tg"></span><span class="tx"></span><button type="button" class="x" aria-label="削除">×</button>';
-    r.querySelector('.tg').textContent = 'カテ' + f.c; r.querySelector('.tg').classList.add('c' + f.c); r.querySelector('.tx').textContent = tok(f);
-    r.querySelector('.x').onclick = () => { foods.splice(i, 1); saveFoods(); renderFoods(); };
-    L.appendChild(r);
-  });
+  if (list.length > FAV_N) {
+    const m = document.createElement('button'); m.type = 'button'; m.className = 'chip more';
+    m.textContent = favAll ? 'とじる' : 'ほか' + (list.length - FAV_N) + '件';
+    m.onclick = () => { favAll = !favAll; renderFavs(); };
+    $('favs').appendChild(m);
+  }
 }
+// 下の一覧の修正
+let editFood = null;
+function editFoodStart(f) {
+  editFood = f; rCat = f.c; markRCat();
+  $('rName').value = f.name; $('rAmt').value = f.amt || ''; $('rKcal').value = ''; $('rP').value = f.p; $('rFat').value = f.fat == null ? '' : f.fat;
+  $('rAdd').textContent = '変更を保存'; $('rAdd').className = 'btn'; $('rCancel').hidden = false; $('foodRegT').textContent = '「' + f.name + '」を直す';
+  $('rMsg').textContent = ''; $('foodReg').open = true; $('rName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function editFoodEnd() {
+  editFood = null; ['rName', 'rAmt', 'rKcal', 'rP', 'rFat'].forEach(i => $(i).value = '');
+  $('rAdd').textContent = '登録する'; $('rAdd').className = 'btn sub'; $('rCancel').hidden = true; $('foodRegT').textContent = '食品を登録する';
+}
+function renderFoods() {
+  $('foodNames').innerHTML = '';
+  foods.forEach(f => { const o = document.createElement('option'); o.value = f.name; $('foodNames').appendChild(o); });
+  renderFavs();
+  $('foodMgrT').textContent = '登録した食品を見る・直す（' + foods.length + '件）';
+  const q = $('fSearch').value.trim(), L = $('foodList2');
+  L.innerHTML = foods.length ? '' : '<p class="note">まだ登録はありません。</p>';
+  let hit = 0;
+  [1, 2].forEach(c => {
+    const list = foods.filter(f => f.c === c && (!q || f.name.includes(q))).sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    if (!list.length) return;
+    hit += list.length;
+    const h = document.createElement('p'); h.className = 'fgrp'; h.textContent = 'カテ' + c + '（' + list.length + '件）'; L.appendChild(h);
+    const box = document.createElement('div'); L.appendChild(box);
+    list.forEach(f => {
+      const r = document.createElement('div'); r.className = 'it';
+      r.innerHTML = '<span class="tg"></span><button type="button" class="tx"></button><button type="button" class="x" aria-label="削除">×</button>';
+      r.querySelector('.tg').textContent = 'カテ' + f.c; r.querySelector('.tg').classList.add('c' + f.c); r.querySelector('.tx').textContent = tok(f);
+      r.querySelector('.tx').onclick = () => editFoodStart(f);
+      r.querySelector('.x').onclick = () => {
+        const i = foods.indexOf(f); if (i < 0) return;
+        foods.splice(i, 1); if (editFood === f) editFoodEnd(); saveFoods(); renderFoods();
+        showUndo('「' + f.name + '」を削除しました', async () => { if (!findFood(f.name)) foods.splice(Math.min(i, foods.length), 0, f); saveFoods(); renderFoods(); return true; });
+      };
+      box.appendChild(r);
+    });
+  });
+  if (foods.length && !hit) { const p = document.createElement('p'); p.className = 'note'; p.textContent = '「' + q + '」は見つかりません。'; L.replaceChildren(p); }
+}
+$('fSearch').oninput = () => renderFoods();
+$('rCancel').onclick = () => { editFoodEnd(); $('rMsg').textContent = ''; };
 // 1品の表記：ご飯 120g（2.4p）　ささみ 100g（1.5p／脂質:0.3g）。量が空なら名前だけ
 function tok(it) { return it.name + (it.amt ? ' ' + it.amt : '') + '（' + r1(it.p) + 'p' + (it.c === 2 && it.fat != null ? '／脂質:' + r1(it.fat) + 'g' : '') + '）'; }
 function sums(list) {
@@ -524,7 +582,7 @@ function sums(list) {
   list.forEach(e => (e.items || []).forEach(it => { s.n++; if (it.c === 1) s.c1 += it.p; else { s.c2 += it.p; s.fat += it.fat || 0; } }));
   return s;
 }
-function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['under', 'あと' + r1(-d) + 'p'] : ['over', r1(d) + 'p多い']; }
+function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['under', 'あと' + f1(-d) + 'p'] : ['over', f1(d) + 'p多い']; }
 // ポーションの表：  いま / 目標 / 判定。間食は目標がないので「いま」だけ
 const f1 = x => (Math.round(x * 10) / 10).toFixed(1);
 function progHTML(k, s) {
@@ -540,7 +598,18 @@ function progHTML(k, s) {
   h += row('<span class="ct">脂質</span>', f1(s.fat) + 'g', snack ? '' : FAT_MAX + 'g以下', snack ? '' : tag(over ? 'over' : 'ok', over ? f1(s.fat - FAT_MAX) + 'gオーバー' : 'OK'));
   return h + '</table>';
 }
-// 朝・昼・夜がすべて記録されていて、どれもカテ1・カテ2が目標どおり、脂質15g以下の日（間食は見ない）
+// この日のポーション：1食1行（色で 目標どおり／足りない／オーバー が分かる）
+function dayRow(k, s) {
+  if (!s) return '<div class="drow"><b>' + KL(k) + '</b><span class="note" style="margin:0">まだ記録がありません</span></div>';
+  const goal = portion && portion[k], tag = (cls, t) => '<span class="tag ' + cls + '">' + t + '</span>';
+  let h = '<div class="drow"><b>' + KL(k) + '</b>';
+  [[s.c1, 0, 'カテ1'], [s.c2, 1, 'カテ2']].forEach(([v, i, lb]) => {
+    h += goal ? tag(judge(v, goal[i])[0], lb + ' ' + f1(v) + '/' + f1(goal[i])) : tag('', lb + ' ' + f1(v) + 'p');
+  });
+  const over = s.fat > FAT_MAX;
+  return h + tag(k === '間食' ? '' : over ? 'over' : 'ok', '脂質 ' + f1(s.fat) + 'g') + '</div>';
+}
+// 朝・昼・夕がすべて記録されていて、どれもカテ1・カテ2が目標どおり、脂質15g以下の日（間食は見ない）
 function dayGoal(k) {
   if (!portion) return false;
   const list = data[k] || [];
@@ -597,10 +666,17 @@ function bumpFreq(now, prev) {
 function updatePreview() {
   const f = fmt($('what').value); $('fmtPrev').textContent = f ? '表示：' + f : '';
   const typed = new Set(items($('what').value));
-  const top = Object.keys(freq).filter(k => !typed.has(k)).sort((a, b) => freq[b].n - freq[a].n || freq[b].t - freq[a].t).slice(0, 10);
+  const top = Object.keys(freq).filter(k => !typed.has(k) && freq[k].n >= 2).sort((a, b) => freq[b].n - freq[a].n || freq[b].t - freq[a].t).slice(0, 10);
   $('chips').innerHTML = ''; $('chipsLabel').hidden = !top.length;
   top.forEach(k => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = k; $('chips').appendChild(b); });
+  oneLine($('chips'));
 }
+// 1列目に入らないボタンは出さない
+function oneLine(box) {
+  const cs = [...box.children]; if (!cs.length || !box.offsetParent) return;
+  const top0 = cs[0].offsetTop; cs.forEach(c => { if (c.offsetTop > top0 + 4) c.remove(); });
+}
+addEventListener('resize', () => updatePreview());
 $('what').oninput = updatePreview;
 $('chips').onclick = e => {
   const b = e.target.closest('.chip'); if (!b) return;
@@ -624,6 +700,7 @@ let fItems = [], fCat = 1, rCat = 1;
 function markCat() {
   document.querySelectorAll('#cats button').forEach(b => b.classList.toggle('on', Number(b.dataset.c) === fCat));
   $('fFatW').style.visibility = fCat === 2 ? '' : 'hidden'; $('fAdd').textContent = 'カテ' + fCat + 'に食品を追加'; $('fAdd').className = 'btn c' + fCat;
+  renderFavs();
 }
 document.querySelectorAll('#cats button').forEach(b => b.onclick = () => { fCat = Number(b.dataset.c); markCat(); });
 function markRCat() {
@@ -636,7 +713,6 @@ function clearAdd() { ['fName', 'fAmt', 'fKcal', 'fP', 'fFat'].forEach(i => $(i)
 function slismLink() {
   const n = $('fName').value.trim(), q = encodeURIComponent(n);
   $('slism').href = n ? 'https://calorie.slism.jp/?searchWord=' + q + '&search=' + encodeURIComponent('検索') : 'https://calorie.slism.jp/';
-  $('mext').href = n ? 'https://fooddb.mext.go.jp/freeword/fword_select.pl?SEARCH_WORD=' + q + '&function1=' + encodeURIComponent('検索') : 'https://fooddb.mext.go.jp/';
 }
 // 登録した食品をgで登録していれば、記録した量（g）からポーションと脂質を計算する
 function fromFood() {
@@ -662,19 +738,28 @@ $('fAdd').onclick = () => {
   const it = { name, c: fCat, amt: $('fAmt').value.trim(), p, fat: fCat === 2 ? fat : null };
   fItems.push(it);
   if ($('fReg').checked) upsertFood({ ...it });
+  countFood(name);
   clearAdd(); lastAdded = it; renderItems(); lastAdded = null;
-  $('fMsg').textContent = '追加しました';
+  $('fMsg').textContent = '✓ 追加しました';
+  clearTimeout(addMsgTimer); addMsgTimer = setTimeout(() => { if ($('fMsg').textContent === '✓ 追加しました') $('fMsg').textContent = ''; }, 2000); // 2秒で消す
 };
 $('rAdd').onclick = () => {
   const name = $('rName').value.trim(), p = num($('rP').value), fat = rCat === 2 ? num($('rFat').value) : null;
   if (!name) { $('rMsg').textContent = '食品名を入れてください。'; return; }
   if (p === null || isNaN(p)) { $('rMsg').textContent = 'ポーションを数字で入れてください。'; return; }
   if (isNaN(fat)) { $('rMsg').textContent = '脂質は数字で入れてください。'; return; }
+  if (editFood) {
+    const same = findFood(name);
+    if (same && same !== editFood) { $('rMsg').textContent = '「' + name + '」はもう登録されています。'; return; }
+    Object.assign(editFood, { name, c: rCat, amt: $('rAmt').value.trim(), p, fat });
+    saveFoods(); renderFoods(); editFoodEnd();
+    $('rMsg').textContent = '「' + name + '」を直しました。前に保存した食事の記録は変わりません。'; return;
+  }
   upsertFood({ name, c: rCat, amt: $('rAmt').value.trim(), p, fat });
   ['rName', 'rAmt', 'rKcal', 'rP', 'rFat'].forEach(i => $(i).value = '');
   $('rMsg').textContent = '「' + name + '」を登録しました。';
 };
-let lastAdded = null;
+let lastAdded = null, addMsgTimer = null;
 function renderItems() {
   const L = $('itemList'); L.innerHTML = fItems.length ? '' : '<p class="note" style="margin:0">下の「カテ1に食品を追加」か、よく使う食品から入れてください。</p>';
   fItems.slice().sort((a, b) => a.c - b.c).forEach(it => {
@@ -700,14 +785,18 @@ function updateMealProg() {
 }
 const NEXT = { '朝': '昼', '昼': '夜', '夜': '夜' };
 // 保存・削除のあと、数秒だけ「元に戻す」を出す
-let undoFn = null, undoTimer = null;
+let undoFn = null, undoTimer = null, undoAt = 0;
 function showUndo(text, fn) {
-  undoFn = fn; $('toastTxt').textContent = text; $('toast').hidden = false;
+  undoFn = fn; undoAt = Date.now(); $('toastTxt').textContent = '✓ ' + text; $('toastUndo').hidden = false; $('toast').hidden = false;
   clearTimeout(undoTimer); undoTimer = setTimeout(() => { $('toast').hidden = true; undoFn = null; }, 7000);
 }
 $('toastUndo').onclick = async () => {
+  if (Date.now() - undoAt < 500) return; // 保存を押した指がそのまま当たったときは戻さない
   const fn = undoFn; undoFn = null; clearTimeout(undoTimer); $('toast').hidden = true;
-  if (fn && await fn()) $('msg').textContent = '元に戻しました。';
+  if (fn && await fn()) {
+    $('toastTxt').textContent = '✓ 元に戻しました'; $('toastUndo').hidden = true; $('toast').hidden = false;
+    undoTimer = setTimeout(() => { $('toast').hidden = true; }, 2500);
+  }
 };
 function resetForm() {
   editId = null; $('msg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
@@ -767,8 +856,8 @@ function render() {
     $('list').appendChild(el);
   });
   const kinds = MEALS.concat(list.some(e => e.kind === '間食') ? ['間食'] : []);
-  $('dayProg').innerHTML = (portion ? '' : '<p class="note">「ポーションを変更」から、朝・昼・夜のポーションを入れると、目標に届いたかが分かります。</p>') +
-    kinds.map(k => { const es = list.filter(e => e.kind === k), s = sums(es); return '<div class="pg"><b>' + KL(k) + (es.length ? '' : '（まだ記録がありません）') + '</b>' + (es.length ? progHTML(k, s) : '') + '</div>'; }).join('');
+  $('dayProg').innerHTML = (portion ? '' : '<p class="note">「ポーションを変更」から、朝・昼・夕のポーションを入れると、目標に届いたかが分かります。</p>') +
+    kinds.map(k => { const es = list.filter(e => e.kind === k); return dayRow(k, es.length ? sums(es) : null); }).join('');
   updateMealProg(); notes();
   renderCal();
 }
@@ -969,11 +1058,13 @@ function renderPrev() {
     const h = document.createElement('b'); h.textContent = jpDate(d) + ' ' + KL(e.kind) + ' ' + jpTime(e.time);
     b.append(h, document.createTextNode(t));
     b.onclick = () => {
-      if ((fItems.length || $('what').value.trim()) && !confirm('入力中の食品とその他を、この食事の内容に入れ替えますか？')) return;
+      // 確認の画面は出さない（出ない環境があるため）。入力中のものがあれば、あとで「元に戻す」で戻せる
+      const had = fItems.length || $('what').value.trim(), was = { items: fItems, what: $('what').value };
       fItems = (e.items || []).map(x => ({ ...x })); $('what').value = e.what || '';
       box.hidden = true; $('prevBtn').textContent = '前回と同じ';
-      renderItems(); updatePreview();
+      renderItems(); updatePreview(); draftSoon();
       $('fMsg').textContent = '入れました。直すときは食品をタップ、消すときは×';
+      if (had) showUndo('前回の内容に入れ替えました', async () => { fItems = was.items; $('what').value = was.what; renderItems(); updatePreview(); draftSoon(); $('fMsg').textContent = ''; return true; });
       $('itemList').scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     box.appendChild(b);
@@ -1328,7 +1419,7 @@ function notes() {
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden && ready) notes(); });
 
-// ポーション計算（1ポーション = 80kcal、0.1p単位で四捨五入）。「計算」で下から開く
+// ポーション計算（1ポーション = 80kcal、0.1p単位で四捨五入）。「計算する」で下から開く
 (() => {
   const PK = 80;
   const num = id => {
@@ -1338,49 +1429,39 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && re
   };
   const esc = s => s.replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
   const fx = (v, d) => String(Math.round(v * 10 ** d) / 10 ** d);
-  let eatU = null; // 食べる量の単位（null = 表示と同じ単位、'g' = グラム）
   let mode = 'eat'; // 'eat' = 食べる量から、'p' = ポーションから
   let last = null; // 記録に転記するための計算結果
-  // 量の書き方：g・mlは10以上なら整数、袋などは小数2けた（1袋のgが分かればgも）
-  const amtText = (v, U, ug) => U === 'g' || U === 'ml' ? fx(v, v >= 10 ? 0 : 1) + U : fx(v, 2) + U + (ug > 0 ? '（' + fx(v * ug, 0) + 'g）' : '');
+  // 量の書き方：g・mlは10以上なら整数、袋などは小数2けた
+  const amtText = (v, U) => U === 'g' || U === 'ml' ? fx(v, v >= 10 ? 0 : 1) + U : fx(v, 2) + U;
   function calc() {
     last = null; $('pcUse').hidden = true;
     const B = num('pcBase'), K = num('pcKcal'), F = num('pcFat'), E = num('pcEat'), W = num('pcWant');
-    const U = $('pcUnit').value.trim() || 'g', isG = U === 'g';
-    const ug = isG ? null : num('pcUg');
+    const U = $('pcUnit').value.trim() || 'g';
     document.querySelectorAll('#pcUnits button').forEach(b => b.classList.toggle('on', b.dataset.u === U));
     document.querySelectorAll('#pcMode button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
     $('pcEatWrap').hidden = mode !== 'eat'; $('pcWantWrap').hidden = mode !== 'p';
-    const needUg = !isG && U !== 'ml';
-    $('pcUgWrap').hidden = !needUg;
-    $('pcUgLabel').textContent = '1' + U + 'は何g？（わかれば）';
-    const canG = needUg && ug > 0;
-    if (!canG) eatU = null;
-    $('pcEatU').hidden = !canG;
-    if (canG) $('pcEatU').innerHTML = '<button type="button" data-u="self" class="' + (eatU ? '' : 'on') + '">' + esc(U) + '</button><button type="button" data-u="g" class="' + (eatU ? 'on' : '') + '">g</button>';
-    $('pcEatSuf').textContent = eatU === 'g' ? 'g' : U;
+    $('pcEatSuf').textContent = U;
     const Uh = esc(U);
     const r1 = $('pcRes1'), r2 = $('pcRes2');
     if (!(B > 0 && K > 0)) { r1.hidden = r2.hidden = true; return; }
     // 1ポーション
     const pU = PK * B / K;
-    r1.innerHTML = '<span>1ポーション（80kcal）は</span><b>' + esc(amtText(pU, U, ug)) + '</b>' + (F != null ? '<span>脂質 ' + fx(F * PK / K, 1) + 'g</span>' : '');
+    r1.innerHTML = '<span>1ポーション（80kcal）は</span><b>' + esc(amtText(pU, U)) + '</b>' + (F != null ? '<span>脂質 ' + fx(F * PK / K, 1) + 'g</span>' : '');
     r1.hidden = false;
     if (mode === 'eat') {
       // 食べる量 → ポーション数
       if (E == null) { r2.hidden = true; return; }
-      const eU = eatU === 'g' ? E / ug : E;
-      const kc = eU * K / B, p = pRound(kc / PK);
-      r2.innerHTML = '<span>' + fx(E, 2) + (eatU === 'g' ? 'g' : Uh) + ' 食べると</span><b>' + p.toFixed(1) + 'p</b><span>' + Math.round(kc) + 'kcal' + (F != null ? '／脂質 ' + fx(eU * F / B, 1) + 'g' : '') + '</span>';
+      const kc = E * K / B, p = pRound(kc / PK);
+      r2.innerHTML = '<span>' + fx(E, 2) + Uh + ' 食べると</span><b>' + p.toFixed(1) + 'p</b><span>' + Math.round(kc) + 'kcal' + (F != null ? '／脂質 ' + fx(E * F / B, 1) + 'g' : '') + '</span>';
       r2.hidden = false;
-      if (E > 0) last = { amt: fx(E, 2) + (eatU === 'g' ? 'g' : U), kcal: kc, fat: F != null ? eU * F / B : null };
+      if (E > 0) last = { amt: fx(E, 2) + U, kcal: kc, fat: F != null ? E * F / B : null };
     } else {
       // 食べたいポーション → 食べる量
       if (W == null) { r2.hidden = true; return; }
       const aU = W * PK * B / K, kc = W * PK;
-      r2.innerHTML = '<span>' + fx(W, 1) + 'p 食べるには</span><b>' + esc(amtText(aU, U, ug)) + '</b><span>' + Math.round(kc) + 'kcal' + (F != null ? '／脂質 ' + fx(aU * F / B, 1) + 'g' : '') + '</span>';
+      r2.innerHTML = '<span>' + fx(W, 1) + 'p 食べるには</span><b>' + esc(amtText(aU, U)) + '</b><span>' + Math.round(kc) + 'kcal' + (F != null ? '／脂質 ' + fx(aU * F / B, 1) + 'g' : '') + '</span>';
       r2.hidden = false;
-      if (W > 0) last = { amt: amtText(aU, U, ug), kcal: kc, fat: F != null ? aU * F / B : null };
+      if (W > 0) last = { amt: amtText(aU, U), kcal: kc, fat: F != null ? aU * F / B : null };
     }
     $('pcUse').hidden = !last;
   }
@@ -1409,7 +1490,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && re
     $('fMsg').textContent = '転記しました。食品名とカテを確かめて「カテ' + fCat + 'に食品を追加」';
     $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
-  ['pcBase', 'pcUnit', 'pcUg', 'pcKcal', 'pcFat', 'pcEat', 'pcWant'].forEach(id => $(id).addEventListener('input', calc));
+  ['pcBase', 'pcUnit', 'pcKcal', 'pcFat', 'pcEat', 'pcWant'].forEach(id => $(id).addEventListener('input', calc));
   $('pcWant').addEventListener('input', () => { $('pcWant').dataset.own = '1'; $('pcWantNote').hidden = true; });
   $('pcMode').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
@@ -1422,15 +1503,11 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && re
     if ((u === 'g' || u === 'ml') && num('pcBase') === 1) $('pcBase').value = '100';
     calc();
   });
-  $('pcEatU').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    eatU = b.dataset.u === 'g' ? 'g' : null; calc();
-  });
   // リセット：新しい商品の計算をはじめる
   $('pcClear').addEventListener('click', () => {
     $('pcBase').value = '100'; $('pcUnit').value = 'g';
-    ['pcUg', 'pcKcal', 'pcFat', 'pcEat', 'pcWant'].forEach(id => $(id).value = '');
-    delete $('pcWant').dataset.own; eatU = null; fillShort(); calc();
+    ['pcKcal', 'pcFat', 'pcEat', 'pcWant'].forEach(id => $(id).value = '');
+    delete $('pcWant').dataset.own; fillShort(); calc();
   });
   calc();
 })();
