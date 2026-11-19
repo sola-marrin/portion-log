@@ -21,10 +21,22 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;font-weight:500;line-height:1.6}
-main{max-width:520px;margin:0 auto;padding:12px 16px 40px}
+main{max-width:520px;margin:0 auto;padding:12px 16px calc(84px + env(safe-area-inset-bottom,0px))}
+.pane[hidden]{display:none}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;background:var(--card);border-top:2px solid var(--line);padding:4px 0 calc(4px + env(safe-area-inset-bottom,0px))}
+.tabs button{flex:1;max-width:130px;background:none;border:0;color:var(--sub);font-size:11px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:52px;justify-content:center}
+.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabs button.on{color:var(--acc)}
+.dnav{display:flex;align-items:center;gap:8px}
+.dnav input{flex:1}
+.dnav button{flex:none;width:44px;height:46px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--acc);font-size:22px;font-weight:700;padding:0}
+#dateCard{padding:10px 12px}
+.srow{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:52px;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:0 14px;margin-top:8px;font-size:15px;text-align:left}
+.srow em{font-style:normal;color:var(--sub);font-size:13px}
+.srow em::after{content:' ›'}
 header{text-align:center;padding:10px 0 6px}
 header svg{display:block;margin:0 auto 2px}
-h1{font-size:30px;margin:0;color:var(--acc);letter-spacing:.06em}
+h1{font-size:26px;margin:0;color:var(--acc);letter-spacing:.06em}
 h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
 .sub{color:var(--sub);font-size:13px;margin:2px 0 0}
 .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px;margin-bottom:16px}
@@ -112,7 +124,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 #nextCard{border:2px solid var(--acc)}#nextCard.now{background:var(--acc2)}#nextTxt{margin:0;font-weight:700}#nextCard{padding:10px 16px}
 #nextTxt{margin:0;font-size:15px}
 #nextTxt b{color:var(--acc);font-size:17px}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 8px 8px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:calc(100% - 32px);font-size:14px;white-space:nowrap}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 8px 8px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);max-width:calc(100% - 32px);font-size:14px;white-space:nowrap}
 .toast[hidden]{display:none}
 .toast button{background:none;color:var(--bg);border:0;border-radius:999px;padding:10px 12px;font-weight:500;font-size:13px;min-height:44px;text-decoration:underline;opacity:.8}
 #toastTxt{font-size:16px;font-weight:700}
@@ -160,7 +172,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
     <polygon points="150,6 157,10 157,18 150,22 143,18 143,10" fill="#c9def0"/>
   </svg>
   <h1>ポーションログ</h1>
-  <p class="sub"><span id="hello"></span><button class="link" id="rename" hidden>名前・色を変更</button><button class="link" id="ptEdit" hidden>ポーションを変更</button></p>
+  <p class="sub"><span id="hello"></span></p>
 </header>
 
 <section class="card" id="noStore" hidden style="border:2px solid var(--acc)">
@@ -192,11 +204,11 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <p class="note" id="ptMsg"></p>
 </section>
 
-<section class="card">
-  <label for="date" style="margin-top:0">日付</label>
-  <input type="date" id="date">
+<section class="card" id="dateCard">
+  <div class="dnav"><button type="button" id="dPrev" aria-label="前の日">‹</button><input type="date" id="date" aria-label="日付"><button type="button" id="dNext" aria-label="次の日">›</button></div>
 </section>
 
+<div class="pane" id="pRec">
 <section class="card" id="formCard">
   <h2 id="formTitle">食事を記録する</h2>
   <div class="draftnote" id="draftNote" hidden><span id="draftTxt"></span> <button type="button" class="link" id="draftDel">消す</button></div>
@@ -244,8 +256,11 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <button class="btn sub" id="quick">写真だけ先に保存</button>
   <button class="btn sub" id="cancel" hidden>やめる</button>
   <button class="btn sub" id="delEntry" hidden>この食事を削除</button>
+  <p class="note" id="recMsg" style="white-space:pre-line;font-weight:700;color:var(--acc)"></p>
 </section>
+</div>
 
+<div class="pane" id="pDay" hidden>
 <section class="card">
   <h2>この日のポーション</h2>
   <div id="dayProg" style="margin-bottom:14px"></div>
@@ -268,13 +283,23 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <button class="btn" id="saveImg">画像を保存</button>
   <p class="note" id="msg2">保存したら、チャットワークでコーチとの個別チャットに添付して送ります。保存できないときは、画像を長押しして「写真に保存」してください。</p>
 </section>
+</div>
 
+<div class="pane" id="pCal" hidden>
 <section class="card">
   <h2>カレンダー</h2>
   <div class="calhead"><button class="link" id="prevM">‹ 前の月</button><b id="calT"></b><button class="link" id="nextM">次の月 ›</button></div>
   <div class="cal" id="cal"></div>
-  <p class="note">色がついている日は記録がある日、○は朝・昼・夕すべてが目標どおりだった日です。</p>
+  <p class="note">色がついている日は記録がある日、○は朝・昼・夕すべてが目標どおりだった日です。日付を押すと、「今日」のタブでその日を開きます。</p>
   <p class="note" id="streak"></p>
+</section>
+</div>
+
+<div class="pane" id="pSet" hidden>
+<section class="card" id="setCard">
+  <h2>設定</h2>
+  <button type="button" class="srow" id="rename" hidden><span>名前・色</span><em id="setName"></em></button>
+  <button type="button" class="srow" id="ptEdit" hidden><span>ポーションの目標</span><em>朝・昼・夕</em></button>
 </section>
 
 <section class="card" id="foodCard">
@@ -310,7 +335,14 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <input type="file" id="bkFile" accept=".json,application/json" hidden>
   <p class="note" id="bkMsg"></p>
 </section>
+</div>
 </main>
+<nav class="tabs" id="tabs">
+  <button type="button" data-t="pRec" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>記録</button>
+  <button type="button" data-t="pDay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>今日</button>
+  <button type="button" data-t="pCal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>カレンダー</button>
+  <button type="button" data-t="pSet"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>設定</button>
+</nav>
 <div class="sheet" id="pcSheet" hidden>
   <div class="sheet-bg" id="pcBg"></div>
   <div class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="pcTitle">
@@ -402,7 +434,7 @@ async function save(changed) {
     if (!askedPersist) { askedPersist = true; try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} }
     return true;
   } catch (e) {
-    $('msg').textContent = '保存できませんでした。スマホの空き容量を確認するか、古い日の記録を削除してください。';
+    $('msg').textContent = $('recMsg').textContent = '保存できませんでした。スマホの空き容量を確認するか、古い日の記録を削除してください。';
     return false;
   }
 }
@@ -439,7 +471,7 @@ applyTheme(hue); markSw();
 function applyName() {
   const has = !!name;
   $('setup').hidden = has; $('rename').hidden = !has; $('ptEdit').hidden = !has;
-  $('hello').textContent = has ? name + 'さん' : '';
+  $('hello').textContent = has ? name + 'さん' : ''; $('setName').textContent = has ? name + 'さん' : '';
   document.querySelectorAll('main > section:not(#setup)').forEach(s => s.style.display = has ? '' : 'none');
   if (has && !portion) openPt();
 }
@@ -619,7 +651,7 @@ function dayGoal(k) {
   });
 }
 function minutes(a, b) { if (!a || !b) return null; const [h1, m1] = a.split(':').map(Number), [h2, m2] = b.split(':').map(Number); let d = h2 * 60 + m2 - h1 * 60 - m1; if (d < 0) d += 1440; return d; }
-$('rename').onclick = () => { $('who').value = name; pick = hue; markSw(); $('start').textContent = '変更する'; $('setup').hidden = false; $('who').focus(); };
+$('rename').onclick = () => { $('who').value = name; pick = hue; markSw(); $('start').textContent = '変更する'; $('setup').hidden = false; window.scrollTo({ top: 0, behavior: 'smooth' }); $('who').focus(); };
 applyName();
 
 let armed = false;
@@ -799,23 +831,46 @@ $('toastUndo').onclick = async () => {
   }
 };
 function resetForm() {
-  editId = null; $('msg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
+  editId = null; $('msg').textContent = ''; $('recMsg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
   $('what').value = ''; $('end').value = ''; fItems = []; clearAdd(); syncPhotoUI(); updatePreview();
   $('add').textContent = 'この食事を保存'; $('cancel').hidden = true;
-  setNow(); renderItems(); draftClear(); $('prevBox').hidden = true; $('prevBtn').textContent = '前回と同じ';
+  setNow(); if (preEditKind) { kind = preEditKind; preEditKind = null; mark(); } renderItems(); draftClear(); $('prevBox').hidden = true; $('prevBtn').textContent = '前回と同じ';
 }
 $('cancel').onclick = resetForm;
+// ---- 下のタブ：記録・今日・カレンダー・設定（アプリを開くと記録から）----
+let tab = 'pRec';
+function showTab(t, keep) {
+  tab = t;
+  // 設定から開いた「名前・色」「ポーション」の入力は、ほかのタブに移ったら閉じる（はじめて開いたときの入力は残す）
+  if (name) $('setup').hidden = true;
+  if (portion) $('ptCard').hidden = true;
+  ['pRec', 'pDay', 'pCal', 'pSet'].forEach(p => { $(p).hidden = p !== t; });
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  $('dateCard').hidden = !(t === 'pRec' || t === 'pDay');
+  if (!keep) window.scrollTo(0, 0);
+}
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => showTab(b.dataset.t));
+// 日付を1日ずつ動かす
+function shiftDate(n) {
+  const [y, m, d] = $('date').value.split('-').map(Number), x = new Date(y, m - 1, d + n);
+  shownDate = $('date').value; $('date').value = x.getFullYear() + '-' + pad(x.getMonth() + 1) + '-' + pad(x.getDate());
+  $('date').onchange();
+}
+$('dPrev').onclick = () => shiftDate(-1);
+$('dNext').onclick = () => shiftDate(1);
 function startEdit(e) {
-  if (editId === e.id) { $('formCard').scrollIntoView({ behavior: 'smooth' }); return; }
+  if (editId === e.id) { showTab('pRec'); return; }
   if (!leaveOk()) return;
   editInner(e, true);
 }
+let preEditKind = null; // 修正を始める前の区分（修正が終わったら戻す）
 function editInner(e, scroll) {
+  if (!editId) preEditKind = kind;
   editId = e.id; $('formTitle').textContent = '修正中：' + KL(e.kind) + ' ' + jpTime(e.time); $('formCard').classList.add('editing'); $('quick').hidden = true; $('delEntry').hidden = false; armDel(false); photo = e.img; kind = e.kind; mark();
   $('time').value = e.time; $('end').value = e.end || ''; $('what').value = e.what;
   fItems = (e.items || []).map(x => ({ ...x })); clearAdd(); renderItems(); syncPhotoUI(); updatePreview();
   $('add').textContent = '変更を保存'; $('cancel').hidden = false;
-  if (scroll) $('formCard').scrollIntoView({ behavior: 'smooth' });
+  if (scroll) showTab('pRec');
 }
 
 function jpTime(t) { const [h, m] = t.split(':').map(Number); return m === 0 ? h + '時' : m === 30 ? h + '時半' : h + '時' + m + '分'; }
@@ -878,7 +933,7 @@ function renderCal() {
     if (dayGoal(k)) { const o = document.createElement('i'); o.textContent = '○'; b.appendChild(o); b.setAttribute('aria-label', d + '日 目標どおり'); }
     if (k === sel) b.classList.add('sel');
     if (k === today) b.classList.add('today');
-    b.onclick = () => { if (k !== $('date').value && !leaveOk()) return; $('date').value = k; $('out').hidden = true; resetForm(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    b.onclick = () => { if (k !== $('date').value && !leaveOk()) return; $('date').value = k; shownDate = k; $('out').hidden = true; resetForm(); render(); showTab('pDay'); };
     el.appendChild(b);
   }
   const t = new Date(now.getFullYear(), now.getMonth(), now.getDate()), has = x => (data[ymd(x.getFullYear(), x.getMonth(), x.getDate())] || []).length;
@@ -943,7 +998,7 @@ $('photo').onchange = async ev => {
   const f = ev.target.files[0]; if (!f) return;
   if (!editId) setNow();
   try { photo = await shrink(f); syncPhotoUI(); draftSoon(); }
-  catch (e) { $('msg').textContent = '写真を読み込めませんでした。'; }
+  catch (e) { $('recMsg').textContent = '写真を読み込めませんでした。'; }
 };
 function rotate(src) {
   return new Promise((res, rej) => {
@@ -958,7 +1013,7 @@ function rotate(src) {
 }
 $('rot').onclick = async () => {
   if (!photo) return;
-  try { photo = await rotate(photo); $('prev').src = photo; draftSoon(); } catch (e) { $('msg').textContent = '回転できませんでした。'; }
+  try { photo = await rotate(photo); $('prev').src = photo; draftSoon(); } catch (e) { $('recMsg').textContent = '回転できませんでした。'; }
 };
 let dayArmed = false;
 function armDay(on) {
@@ -992,7 +1047,7 @@ $('moveDay').onclick = async () => {
 };
 async function commit(needText) {
   if (busy) return;
-  if (!ready) { $('msg').textContent = '読み込み中です。少し待ってからもう一度押してください。'; return; }
+  if (!ready) { $('recMsg').textContent = '読み込み中です。少し待ってからもう一度押してください。'; return; }
   busy = true;
   try { await commitInner(needText); } finally { busy = false; }
 }
@@ -1015,8 +1070,8 @@ async function commitInner(needText) {
     clearAdd();
   }
   const hasFood = !!($('what').value.trim() || fItems.length);
-  if (!photo && !hasFood) { $('msg').textContent = '写真か、食べたもののどちらかを入れてください。'; return; }
-  if (needText && !hasFood) { $('msg').textContent = '食べたものを入れてください。あとで入れるなら「写真だけ先に保存」を押してください。'; return; }
+  if (!photo && !hasFood) { $('recMsg').textContent = '写真か、食べたもののどちらかを入れてください。'; return; }
+  if (needText && !hasFood) { $('recMsg').textContent = '食べたものを入れてください。あとで入れるなら「写真だけ先に保存」を押してください。'; return; }
   const d = $('date').value;
   const rec = { id: editId || Date.now(), kind, time: $('time').value, end: $('end').value || '', what: $('what').value.trim(), img: photo || '', items: fItems.map(x => ({ ...x })) };
   const before = JSON.stringify(data[d] || []);
@@ -1033,12 +1088,13 @@ async function commitInner(needText) {
     if (!wasEdit) { // 入力欄に戻して、直してから保存し直せるようにする
       resetForm(); kind = rec.kind; mark(); $('time').value = rec.time; $('end').value = rec.end; $('what').value = rec.what;
       photo = rec.img || null; fItems = rec.items.map(x => ({ ...x })); syncPhotoUI(); updatePreview(); renderItems();
-      $('formCard').scrollIntoView({ behavior: 'smooth' });
+      showTab('pRec');
     }
     render(); return true;
   });
   $('msg').textContent = (wasEdit ? '変更を保存しました。' : hadText ? '追加しました。' : '写真を保存しました。あとで「入力」を押すと、食べたものを書き込めます。') + note + gapText(d, rec.kind);
-  $('list').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (note) $('fMsg').textContent = note.trim();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 // ---- 前回と同じ：同じ区分の、前の食事の食品と「その他」を入れる（入れたあとで直せる）----
 function prevMeals() {
