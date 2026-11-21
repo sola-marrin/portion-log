@@ -88,7 +88,16 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 .pg{border:2px solid var(--line);border-radius:16px;padding:8px 12px;margin-top:8px}
 .pg b{display:block;color:var(--acc)}
 .tag{display:inline-block;font-size:13px;border-radius:999px;padding:2px 10px;margin:4px 4px 0 0;border:2px solid var(--line)}
-.tag.ok{background:var(--mint);border-color:var(--mint)}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
+.tag.ok{background:var(--mint);border-color:var(--mint)}
+:root{--near:#2f8a63}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--near:#8fd6b4}}
+:root[data-theme="dark"]{--near:#8fd6b4}
+.tag.near{border-color:var(--near);color:var(--near);background:transparent;font-weight:700}
+.recbtn{border:2px solid var(--acc);background:var(--card);color:var(--acc);font-weight:700;border-radius:999px;padding:0 14px;min-height:36px;font-size:13px}
+.pills button.done:not(.on){background:var(--acc2)}
+.ck{font-size:.85em;margin-left:2px}
+.dupnote{background:var(--acc2);border-radius:14px;padding:8px 12px;margin-top:8px;font-size:13px}
+.dupnote .recbtn{margin-top:6px;min-height:44px}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
 /* 足りない＝青の枠、オーバー＝ぬりつぶしの濃い赤 */
 :root{--under:#2f76b8;--under-bg:#e6f0fa;--over:#c0302b;--over-bg:#c0302b;--over-ink:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--under:#8cc3f2;--under-bg:#22303d;--over:#c4322c;--over-bg:#c4322c;--over-ink:#fff}}
@@ -135,8 +144,11 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 #fMsg{font-weight:700;color:var(--acc)}
 .drow{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:6px 0;border-top:1px solid var(--line)}
 .drow:first-child{border-top:0}
+.drow{flex-wrap:nowrap}
+.dtags{flex:1;display:flex;flex-wrap:wrap;gap:4px}
 .drow b{width:2em;flex:none}
-.drow .tag{margin:0;font-variant-numeric:tabular-nums;font-size:12px;padding:3px 8px;letter-spacing:0}
+.drow .tag{margin:0;font-variant-numeric:tabular-nums;font-size:12px;padding:3px 7px;letter-spacing:-.02em;font-weight:700}
+.drow .tl{font-weight:500;font-size:11px;margin-right:3px}
 .skull{margin-left:2px;font-size:.9em}
 .fin{border:2px solid var(--acc);background:var(--acc);color:var(--acc-ink);font-weight:700;border-radius:999px;padding:8px 14px;white-space:nowrap}
 #dayTools summary{color:var(--acc);text-decoration:underline;font-size:13px;cursor:pointer;margin-top:14px;padding:6px 0}
@@ -220,6 +232,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <p class="note" id="nophoto">写真はなくても保存できます</p>
   <label>区分</label>
   <div class="pills" id="kinds"><button data-k="朝">朝</button><button data-k="昼">昼</button><button data-k="夜">夕</button><button data-k="間食">間食<span class="skull" aria-hidden="true">💀</span></button></div>
+  <div class="dupnote" id="dupNote" hidden><span id="dupTxt"></span><br><button type="button" class="recbtn" id="dupEdit"></button></div>
   <div class="row">
     <div><label for="time">食べ始め</label><input type="time" id="time"></div>
     <div><label for="end">食べ終わり</label><input type="time" id="end"></div>
@@ -264,7 +277,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 <section class="card">
   <h2>この日のポーション</h2>
   <div id="dayProg" style="margin-bottom:14px"></div>
-  <p class="note" id="dayKey" style="margin:-8px 0 14px">数字は いま/目標。緑＝目標どおり、青＝足りない、赤＝オーバー</p>
+  <p class="note" id="dayKey" style="margin:-8px 0 14px">緑＝OK、緑の枠＝おしい（差0.5p未満）、青＝足りない、赤＝多い</p>
   <h2>この日の食事</h2>
   <div id="list"></div>
   <button class="btn" id="make">1枚にまとめる</button>
@@ -290,7 +303,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <h2>カレンダー</h2>
   <div class="calhead"><button class="link" id="prevM">‹ 前の月</button><b id="calT"></b><button class="link" id="nextM">次の月 ›</button></div>
   <div class="cal" id="cal"></div>
-  <p class="note">色がついている日は記録がある日、○は朝・昼・夕すべてが目標どおりだった日です。日付を押すと、「今日」のタブでその日を開きます。</p>
+  <p class="note">色がついている日は記録がある日です。◎は朝・昼・夕すべてがOK、○はすべてがOKかおしい（差0.5p未満）だった日です。日付を押すと、「今日」のタブでその日を開きます。</p>
   <p class="note" id="streak"></p>
 </section>
 </div>
@@ -421,6 +434,7 @@ async function init() {
     if (Array.isArray(f)) foods = f.filter(validFood);
   } catch (e) {}
   ready = true; renderFoods(); render(); updatePreview(); renderItems();
+  kind = pickKind(kind); mark(); updateMealProg();
   await draftRestore();
 }
 async function save(changed) {
@@ -444,7 +458,31 @@ $('date').value = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(
 $('time').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
 const hr = now.getHours(); kind = hr < 10 ? '朝' : hr < 15 ? '昼' : '夜';
 
-function mark() { document.querySelectorAll('#kinds button').forEach(b => b.classList.toggle('on', b.dataset.k === kind)); }
+// その日に記録がある区分（修正中の記録は数えない）
+function doneOf(k) { return (data[$('date').value] || []).filter(e => e.kind === k && e.id !== editId).sort((a, b) => a.time.localeCompare(b.time)); }
+// 時間や「次へ」で選ぶときは、記録ずみの区分を飛ばす（朝→昼→夕の順に、先へだけ進む）
+function pickKind(k) {
+  if (k === '間食') return k;
+  const order = ['朝', '昼', '夜'];
+  for (let i = order.indexOf(k); i >= 0 && i < order.length; i++) if (!doneOf(order[i]).length) return order[i];
+  return k;
+}
+function mark() {
+  document.querySelectorAll('#kinds button').forEach(b => {
+    const k = b.dataset.k, done = k !== '間食' && doneOf(k).length > 0;
+    b.classList.toggle('on', k === kind); b.classList.toggle('done', done);
+    let ck = b.querySelector('.ck');
+    if (done && !ck) { ck = document.createElement('span'); ck.className = 'ck'; ck.textContent = '✓'; ck.setAttribute('aria-label', '記録ずみ'); b.appendChild(ck); }
+    if (!done && ck) ck.remove();
+  });
+  const es = kind === '間食' || editId ? [] : doneOf(kind);
+  $('dupNote').hidden = !es.length;
+  if (es.length) {
+    $('dupTxt').textContent = KL(kind) + 'はもう記録があります（' + es.map(e => jpTime(e.time)).join('・') + '）';
+    $('dupEdit').textContent = 'この' + KL(kind) + 'を修正する';
+    $('dupEdit').onclick = () => startEdit(es[es.length - 1]);
+  }
+}
 document.querySelectorAll('#kinds button').forEach(b => b.onclick = () => { kind = b.dataset.k; mark(); updateMealProg(); });
 mark();
 // ピンクは、カテ1の赤寄りのピンクと見分けるため、赤むらさき寄り（328）。前のピンク（344）を選んでいた人も、こちらにする
@@ -614,7 +652,15 @@ function sums(list) {
   list.forEach(e => (e.items || []).forEach(it => { s.n++; if (it.c === 1) s.c1 += it.p; else { s.c2 += it.p; s.fat += it.fat || 0; } }));
   return s;
 }
-function judge(v, t) { const d = r1(v - t); return Math.abs(d) < 0.5 ? ['ok', '目標どおり'] : d < 0 ? ['under', 'あと' + f1(-d) + 'p'] : ['over', f1(d) + 'p多い']; }
+// 目標と同じ（差0）＝ok（OK）、おしい（差0.5p未満）＝near、それ以上は under / over
+function judge(v, t) {
+  const d = r1(v - t);
+  if (d === 0) return ['ok', 'OK'];
+  if (Math.abs(d) < 0.5) return ['near', d < 0 ? 'おしい あと' + f1(-d) + 'p' : 'おしい ' + f1(d) + 'p多い'];
+  return d < 0 ? ['under', 'あと' + f1(-d) + 'p'] : ['over', f1(d) + 'p多い'];
+}
+// 1行用の短い判定
+const shortJ = (v, t) => { const d = r1(v - t); return d === 0 ? 'OK' : d < 0 ? 'あと' + f1(-d) : f1(d) + '多い'; };
 // ポーションの表：  いま / 目標 / 判定。間食は目標がないので「いま」だけ
 const f1 = x => (Math.round(x * 10) / 10).toFixed(1);
 function progHTML(k, s) {
@@ -631,24 +677,33 @@ function progHTML(k, s) {
   return h + '</table>';
 }
 // この日のポーション：1食1行（色で 目標どおり／足りない／オーバー が分かる）
+// 見出し（カテ1・カテ2・脂質）は小さく細く、判定は太く
+const TL = t => '<span class="tl">' + t + '</span>';
 function dayRow(k, s) {
-  if (!s) return '<div class="drow"><b>' + KL(k) + '</b><span class="note" style="margin:0">まだ記録がありません</span></div>';
+  if (!s) return '<div class="drow"><b>' + KL(k) + '</b><span class="note" style="margin:0;flex:1">まだ記録がありません</span>' + (k === '間食' ? '' : '<button type="button" class="recbtn" data-rec="' + k + '">記録する</button>') + '</div>';
   const goal = portion && portion[k], tag = (cls, t) => '<span class="tag ' + cls + '">' + t + '</span>';
-  let h = '<div class="drow"><b>' + KL(k) + '</b>';
+  let h = '<div class="drow"><b>' + KL(k) + '</b><div class="dtags">';
   [[s.c1, 0, 'カテ1'], [s.c2, 1, 'カテ2']].forEach(([v, i, lb]) => {
-    h += goal ? tag(judge(v, goal[i])[0], lb + ' ' + f1(v) + '/' + f1(goal[i])) : tag('', lb + ' ' + f1(v) + 'p');
+    h += goal ? tag(judge(v, goal[i])[0], TL(lb) + shortJ(v, goal[i])) : tag('', TL(lb) + f1(v) + 'p');
   });
   const over = s.fat > FAT_MAX;
-  return h + tag(k === '間食' ? '' : over ? 'over' : 'ok', '脂質 ' + f1(s.fat) + 'g') + '</div>';
+  // 間食は目標がないので数字のまま。ほかは 15g以下なら「脂質OK」、超えたら「脂質 ○g多い」
+  return h + (k === '間食' ? tag('', TL('脂質') + f1(s.fat) + 'g') : tag(over ? 'over' : 'ok', TL('脂質') + (over ? f1(s.fat - FAT_MAX) + 'g多い' : 'OK'))) + '</div></div>';
 }
 // 朝・昼・夕がすべて記録されていて、どれもカテ1・カテ2が目標どおり、脂質15g以下の日（間食は見ない）
 function dayGoal(k) {
-  if (!portion) return false;
+  if (!portion) return 0;
   const list = data[k] || [];
-  return MEALS.every(m => {
+  let lv = 2;
+  for (const m of MEALS) {
     const es = list.filter(e => e.kind === m), s = sums(es);
-    return s.n > 0 && judge(s.c1, portion[m][0])[0] === 'ok' && judge(s.c2, portion[m][1])[0] === 'ok' && s.fat <= FAT_MAX;
-  });
+    if (!s.n || s.fat > FAT_MAX) return 0;
+    for (const [v, t] of [[s.c1, portion[m][0]], [s.c2, portion[m][1]]]) {
+      const j = judge(v, t)[0];
+      if (j === 'near') lv = 1; else if (j !== 'ok') return 0;
+    }
+  }
+  return lv;
 }
 function minutes(a, b) { if (!a || !b) return null; const [h1, m1] = a.split(':').map(Number), [h2, m2] = b.split(':').map(Number); let d = h2 * 60 + m2 - h1 * 60 - m1; if (d < 0) d += 1440; return d; }
 $('rename').onclick = () => { $('who').value = name; pick = hue; markSw(); $('start').textContent = '変更する'; $('setup').hidden = false; window.scrollTo({ top: 0, behavior: 'smooth' }); $('who').focus(); };
@@ -672,7 +727,7 @@ $('delEntry').onclick = async () => {
 function setNow() {
   const n = new Date(), h = n.getHours();
   $('time').value = pad(h) + ':' + pad(n.getMinutes());
-  kind = h < 10 ? '朝' : h < 15 ? '昼' : '夜'; mark();
+  kind = pickKind(h < 10 ? '朝' : h < 15 ? '昼' : '夜'); mark();
 }
 const SEPRE = /[\s、,，／\/・]+/;
 const items = t => (t || '').split(SEPRE).filter(Boolean);
@@ -849,7 +904,19 @@ function showTab(t, keep) {
   $('dateCard').hidden = !(t === 'pRec' || t === 'pDay');
   if (!keep) window.scrollTo(0, 0);
 }
-document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => showTab(b.dataset.t));
+const todayStr = () => { const n = new Date(); return n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate()); };
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => {
+  if (b.dataset.t === 'pRec' && !formDirty() && $('date').value !== todayStr()) {
+    $('date').value = shownDate = todayStr(); $('out').hidden = true; resetForm(); render();
+  }
+  showTab(b.dataset.t);
+});
+// 今日のタブの「記録する」：その日・その区分で記録の画面を開く
+$('dayProg').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-rec]'); if (!b) return;
+  if (!leaveOk()) return;
+  resetForm(); kind = b.dataset.rec; mark(); updateMealProg(); showTab('pRec');
+});
 // 日付を1日ずつ動かす
 function shiftDate(n) {
   const [y, m, d] = $('date').value.split('-').map(Number), x = new Date(y, m - 1, d + n);
@@ -913,7 +980,7 @@ function render() {
   const kinds = MEALS.concat(list.some(e => e.kind === '間食') ? ['間食'] : []);
   $('dayProg').innerHTML = (portion ? '' : '<p class="note">「ポーションを変更」から、朝・昼・夕のポーションを入れると、目標に届いたかが分かります。</p>') +
     kinds.map(k => { const es = list.filter(e => e.kind === k); return dayRow(k, es.length ? sums(es) : null); }).join('');
-  updateMealProg(); notes();
+  updateMealProg(); notes(); mark();
   renderCal();
 }
 
@@ -930,7 +997,8 @@ function renderCal() {
     const k = ymd(cal.y, cal.m, d), b = document.createElement('button');
     b.type = 'button'; b.textContent = d;
     if ((data[k] || []).length) b.classList.add('has');
-    if (dayGoal(k)) { const o = document.createElement('i'); o.textContent = '○'; b.appendChild(o); b.setAttribute('aria-label', d + '日 目標どおり'); }
+    const lv = dayGoal(k);
+    if (lv) { const o = document.createElement('i'); o.textContent = lv === 2 ? '◎' : '○'; b.appendChild(o); b.setAttribute('aria-label', d + '日 ' + (lv === 2 ? 'すべてOK' : 'すべてOKかおしい')); }
     if (k === sel) b.classList.add('sel');
     if (k === today) b.classList.add('today');
     b.onclick = () => { if (k !== $('date').value && !leaveOk()) return; $('date').value = k; shownDate = k; $('out').hidden = true; resetForm(); render(); showTab('pDay'); };
@@ -1080,7 +1148,7 @@ async function commitInner(needText) {
   if (!(await save([d]))) { data[d] = JSON.parse(before); return; }
   const wasEdit = !!editId, hadText = entryHas(rec); bumpFreq(rec.what, prevWhat); saveFreq(); resetForm(); $('out').hidden = true;
   // 新しく保存したら、次の区分へ（朝→昼→夕。間食のあとは時間で決める）
-  if (!wasEdit && NEXT[rec.kind]) { kind = NEXT[rec.kind]; mark(); }
+  if (!wasEdit && NEXT[rec.kind]) { kind = pickKind(NEXT[rec.kind]); mark(); }
   render();
   showUndo(wasEdit ? '変更を保存しました' : '保存しました', async () => {
     data[d] = JSON.parse(before);
