@@ -42,7 +42,7 @@ h2{font-size:17px;margin:0 0 8px;color:var(--acc)}
 .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px;margin-bottom:16px}
 label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
 input,textarea,button{font:inherit;color:inherit}
-input[type=date],input[type=time],input[type=text],textarea{width:100%;padding:11px;border:2px solid var(--line);border-radius:14px;background:var(--bg)}
+input[type=date],input[type=time],input[type=text],input[type=search],textarea{width:100%;padding:11px;border:2px solid var(--line);border-radius:14px;background:var(--bg)}
 input[type=date],input[type=time]{display:block;min-width:0;max-width:100%;min-height:46px;-webkit-appearance:none;appearance:none;text-align:left}
 input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
 .row{display:flex;gap:10px}.row>*{flex:1}
@@ -97,7 +97,25 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 .pills button.done:not(.on){background:var(--acc2)}
 .ck{font-size:.85em;margin-left:2px}
 .dupnote{background:var(--acc2);border-radius:14px;padding:8px 12px;margin-top:8px;font-size:13px}
-.dupnote .recbtn{margin-top:6px;min-height:44px}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
+.dupnote{padding:14px;text-align:center;font-size:14px}
+.dupnote b{display:block;color:var(--acc);font-size:16px}
+.ftitle{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.ftitle h2{margin:0}
+.backbtn{flex:none;border:2px solid var(--acc);background:var(--card);color:var(--acc);font-weight:700;border-radius:999px;padding:0 14px;min-height:40px;font-size:14px}
+.dupnote .btn{margin-top:10px}
+.duprow{display:flex;gap:10px}.duprow .btn{flex:1}
+/* 食間 */
+.gapline{display:flex;align-items:center;gap:8px;padding:4px 0 4px 30px;font-size:13px;color:var(--sub);border-top:2px solid var(--line)}
+.gapline::before{content:'';width:3px;height:22px;border-radius:2px;background:var(--line);margin-left:-14px}
+.gapline b{border-radius:999px;padding:1px 10px;font-weight:700;border:2px solid transparent}
+.gapline .ok{background:var(--mint)}
+.gapline .under{border-color:var(--under);color:var(--under);background:var(--under-bg)}
+.gapline .ng{background:var(--over-bg);color:var(--over-ink)}
+.gapline .na{border:2px dashed var(--line);color:var(--sub);font-weight:500}
+.gapline + .item{border-top:0}
+.nomeat,.item .nomeat{display:inline-block;font-size:12px;border-radius:999px;padding:0 8px;margin-left:6px;background:var(--c2-bg);color:var(--c2-line);vertical-align:1px}
+#favSheet #favs{margin-top:10px}
+#favSheet #favs .chip{flex:none}.tag.ng{border-color:var(--acc);color:var(--acc);font-weight:700}
 /* 足りない＝青の枠、オーバー＝ぬりつぶしの濃い赤 */
 :root{--under:#2f76b8;--under-bg:#e6f0fa;--over:#c0302b;--over-bg:#c0302b;--over-ink:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--under:#8cc3f2;--under-bg:#22303d;--over:#c4322c;--over-bg:#c4322c;--over-ink:#fff}}
@@ -222,17 +240,20 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
 
 <div class="pane" id="pRec">
 <section class="card" id="formCard">
-  <h2 id="formTitle">食事を記録する</h2>
+  <div class="ftitle"><h2 id="formTitle">食事を記録する</h2><button type="button" class="backbtn" id="cancelTop" hidden>‹ やめる</button></div>
   <div class="draftnote" id="draftNote" hidden><span id="draftTxt"></span> <button type="button" class="link" id="draftDel">消す</button></div>
+  <div id="photoBox">
   <label class="pick" for="photo" id="pickLabel">写真を撮る・選ぶ</label>
   <input type="file" id="photo" accept="image/*" hidden>
   <img id="prev" alt="選んだ写真">
   <button type="button" class="btn sub" id="rot" hidden>写真を左に回転する</button>
   <button type="button" class="btn sub" id="rmPhoto" hidden>写真を外す</button>
   <p class="note" id="nophoto">写真はなくても保存できます</p>
+  </div>
   <label>区分</label>
   <div class="pills" id="kinds"><button data-k="朝">朝</button><button data-k="昼">昼</button><button data-k="夜">夕</button><button data-k="間食">間食<span class="skull" aria-hidden="true">💀</span></button></div>
-  <div class="dupnote" id="dupNote" hidden><span id="dupTxt"></span><br><button type="button" class="recbtn" id="dupEdit"></button></div>
+  <div class="dupnote" id="dupNote" hidden><b id="dupTxt"></b><div class="duprow"><button type="button" class="btn" id="dupEdit">修正する</button><button type="button" class="btn sub" id="dupBack">やめる</button></div></div>
+  <div id="formBody">
   <div class="row">
     <div><label for="time">食べ始め</label><input type="time" id="time"></div>
     <div><label for="end">食べ終わり</label><input type="time" id="end"></div>
@@ -244,8 +265,7 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <div class="addbox">
     <label>カテゴリー</label>
     <div class="pills" id="cats"><button type="button" data-c="1" class="c1">カテ1</button><button type="button" data-c="2" class="c2">カテ2</button></div>
-    <label id="favLabel" hidden>カテ1のよく使う食品</label>
-    <div id="favs"></div>
+    <button type="button" class="calcbtn" id="favOpen" hidden style="margin-top:10px;width:100%">よく使う食品から選ぶ</button>
     <label for="fName">食品名</label>
     <input type="text" id="fName" placeholder="ご飯" list="foodNames" autocomplete="off"><datalist id="foodNames"></datalist>
     <div class="g2">
@@ -263,12 +283,14 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <label for="what">その他（野菜・汁物など。ポーションの計算には入りません）</label>
   <textarea id="what" rows="2" placeholder="サラダ 味噌汁"></textarea>
   <p id="fmtPrev"></p>
+  <label class="chk"><input type="checkbox" id="noMeat">肉なし（肉を使っていない食事）</label>
   <label id="chipsLabel" hidden>その他でよく使う食品</label>
   <div id="chips"></div>
   <button class="btn" id="add">この食事を保存</button>
   <button class="btn sub" id="quick">写真だけ先に保存</button>
   <button class="btn sub" id="cancel" hidden>やめる</button>
   <button class="btn sub" id="delEntry" hidden>この食事を削除</button>
+  </div>
   <p class="note" id="recMsg" style="white-space:pre-line;font-weight:700;color:var(--acc)"></p>
 </section>
 </div>
@@ -356,6 +378,15 @@ input[type=number]{width:100%;padding:11px;border:2px solid var(--line);border-r
   <button type="button" data-t="pCal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>カレンダー</button>
   <button type="button" data-t="pSet"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>設定</button>
 </nav>
+<div class="sheet" id="favSheet" hidden>
+  <div class="sheet-bg" id="favBg"></div>
+  <div class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="favTitle">
+    <div class="sheet-head"><h2 id="favTitle">カテ1のよく使う食品</h2><button type="button" class="sheet-x" id="favClose" aria-label="閉じる">×</button></div>
+    <input type="search" id="favQ" placeholder="さがす（例：ご）">
+    <div id="favs"></div>
+    <p class="note">選ぶと入力欄に入ります。量を変えると、ポーションも計算し直します。</p>
+  </div>
+</div>
 <div class="sheet" id="pcSheet" hidden>
   <div class="sheet-bg" id="pcBg"></div>
   <div class="sheet-body" role="dialog" aria-modal="true" aria-labelledby="pcTitle">
@@ -475,15 +506,27 @@ function mark() {
     if (done && !ck) { ck = document.createElement('span'); ck.className = 'ck'; ck.textContent = '✓'; ck.setAttribute('aria-label', '記録ずみ'); b.appendChild(ck); }
     if (!done && ck) ck.remove();
   });
-  const es = kind === '間食' || editId ? [] : doneOf(kind);
-  $('dupNote').hidden = !es.length;
-  if (es.length) {
-    $('dupTxt').textContent = KL(kind) + 'はもう記録があります（' + es.map(e => jpTime(e.time)).join('・') + '）';
-    $('dupEdit').textContent = 'この' + KL(kind) + 'を修正する';
-    $('dupEdit').onclick = () => startEdit(es[es.length - 1]);
+  const es = kind === '間食' || editId ? [] : doneOf(kind), locked = es.length > 0;
+  $('dupNote').hidden = !locked; $('formBody').hidden = locked; $('photoBox').hidden = locked;
+  if (locked) {
+    const e = es[es.length - 1];
+    $('dupTxt').textContent = KL(kind) + 'は記録済みです';
+    $('dupEdit').onclick = () => startEdit(e);
   }
 }
-document.querySelectorAll('#kinds button').forEach(b => b.onclick = () => { kind = b.dataset.k; mark(); updateMealProg(); });
+// 記録済みの区分を選ぶ前に選んでいた区分（「やめる」で戻る先）
+let openKind = null;
+document.querySelectorAll('#kinds button').forEach(b => b.onclick = () => {
+  if (kind !== '間食' && !doneOf(kind).length || kind === '間食') openKind = kind;
+  kind = b.dataset.k; mark(); updateMealProg();
+});
+// 「やめる」：前に選んでいた区分（なければ次に記録する区分）に戻る。全部記録済みなら今日のタブへ
+$('dupBack').onclick = () => {
+  const n = new Date().getHours(), next = pickKind(n < 10 ? '朝' : n < 15 ? '昼' : '夜');
+  const k = openKind && (openKind === '間食' || !doneOf(openKind).length) ? openKind : next;
+  if (k !== '間食' && doneOf(k).length) { showTab('pDay'); return; }
+  kind = k; mark(); updateMealProg();
+};
 mark();
 // ピンクは、カテ1の赤寄りのピンクと見分けるため、赤むらさき寄り（328）。前のピンク（344）を選んでいた人も、こちらにする
 const PINK = 328;
@@ -580,28 +623,26 @@ function countFood(name) { const f = findFood(name); if (f) { f.n = (f.n || 0) +
 const WEEK = 7 * 864e5;
 const isNew = f => !f.n && f.t && Date.now() - f.t < WEEK;
 const favOrder = (a, b) => (isNew(b) - isNew(a)) || ((b.n || 0) - (a.n || 0)) || ((b.t || 0) - (a.t || 0));
-const FAV_N = 5;
-let favAll = false, favCat = 1;
 function renderFavs() {
-  if (favCat !== fCat) { favCat = fCat; favAll = false; }
-  const list = foods.filter(f => f.c === fCat).sort(favOrder);
-  $('favs').innerHTML = ''; $('favLabel').hidden = !list.length; $('favLabel').textContent = 'カテ' + fCat + 'のよく使う食品';
-  (favAll ? list : list.slice(0, FAV_N)).forEach(f => {
+  const all = foods.filter(f => f.c === fCat).sort(favOrder), q = $('favQ').value.trim(), list = q ? all.filter(f => f.name.includes(q)) : all;
+  $('favOpen').hidden = !all.length; $('favOpen').textContent = 'よく使う食品から選ぶ（' + all.length + '件）';
+  $('favTitle').textContent = 'カテ' + fCat + 'のよく使う食品';
+  $('favs').innerHTML = all.length && !list.length ? '<p class="note">「' + q.replace(/[&<>"']/g, '') + '」は見つかりません。</p>' : '';
+  list.forEach(f => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'chip c' + f.c; b.textContent = f.name;
     b.onclick = () => {
       $('fName').value = f.name; $('fAmt').value = f.amt || ''; $('fKcal').value = ''; $('fP').value = f.p; $('fFat').value = f.c === 2 && f.fat != null ? f.fat : '';
       slismLink(); $('fMsg').textContent = '入力欄に入れました';
-      $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      closeFav(); $('fName').scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     $('favs').appendChild(b);
   });
-  if (list.length > FAV_N) {
-    const m = document.createElement('button'); m.type = 'button'; m.className = 'chip more';
-    m.textContent = favAll ? 'とじる' : 'ほか' + (list.length - FAV_N) + '件';
-    m.onclick = () => { favAll = !favAll; renderFavs(); };
-    $('favs').appendChild(m);
-  }
 }
+function openFav() { $('favQ').value = ''; renderFavs(); $('favSheet').hidden = false; document.body.style.overflow = 'hidden'; }
+function closeFav() { $('favSheet').hidden = true; document.body.style.overflow = ''; }
+$('favOpen').onclick = openFav; $('favClose').onclick = closeFav; $('favBg').onclick = closeFav;
+$('favQ').oninput = renderFavs;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('favSheet').hidden) closeFav(); });
 // 下の一覧の修正
 let editFood = null;
 function editFoodStart(f) {
@@ -887,11 +928,12 @@ $('toastUndo').onclick = async () => {
 };
 function resetForm() {
   editId = null; $('msg').textContent = ''; $('recMsg').textContent = ''; $('formTitle').textContent = '食事を記録する'; $('formCard').classList.remove('editing'); $('rot').hidden = true; $('quick').hidden = false; $('delEntry').hidden = true; armDel(false); photo = null; $('prev').style.display = 'none'; $('photo').value = '';
-  $('what').value = ''; $('end').value = ''; fItems = []; clearAdd(); syncPhotoUI(); updatePreview();
-  $('add').textContent = 'この食事を保存'; $('cancel').hidden = true;
+  $('what').value = ''; $('end').value = ''; $('noMeat').checked = false; fItems = []; clearAdd(); syncPhotoUI(); updatePreview();
+  $('add').textContent = 'この食事を保存'; $('cancel').hidden = true; $('cancelTop').hidden = true;
   setNow(); if (preEditKind) { kind = preEditKind; preEditKind = null; mark(); } renderItems(); draftClear(); $('prevBox').hidden = true; $('prevBtn').textContent = '前回と同じ';
 }
 $('cancel').onclick = resetForm;
+$('cancelTop').onclick = () => { resetForm(); window.scrollTo({ top: 0, behavior: 'smooth' }); }; // 修正をやめて、もとの画面に戻る
 // ---- 下のタブ：記録・今日・カレンダー・設定（アプリを開くと記録から）----
 let tab = 'pRec';
 function showTab(t, keep) {
@@ -934,9 +976,9 @@ let preEditKind = null; // 修正を始める前の区分（修正が終わっ�
 function editInner(e, scroll) {
   if (!editId) preEditKind = kind;
   editId = e.id; $('formTitle').textContent = '修正中：' + KL(e.kind) + ' ' + jpTime(e.time); $('formCard').classList.add('editing'); $('quick').hidden = true; $('delEntry').hidden = false; armDel(false); photo = e.img; kind = e.kind; mark();
-  $('time').value = e.time; $('end').value = e.end || ''; $('what').value = e.what;
+  $('time').value = e.time; $('end').value = e.end || ''; $('what').value = e.what; $('noMeat').checked = !!e.noMeat;
   fItems = (e.items || []).map(x => ({ ...x })); clearAdd(); renderItems(); syncPhotoUI(); updatePreview();
-  $('add').textContent = '変更を保存'; $('cancel').hidden = false;
+  $('add').textContent = '変更を保存'; $('cancel').hidden = false; $('cancelTop').hidden = false;
   if (scroll) showTab('pRec');
 }
 
@@ -946,6 +988,12 @@ function jpDate(d) { const [y, m, dd] = d.split('-').map(Number); return m + '�
 const timeRange = e => jpTime(e.time) + (e.end ? '〜' + jpTime(e.end) : '');
 const entryHas = e => !!(e.what || (e.items || []).length);
 function entryText(e) { const its = (e.items || []).slice().sort((a, b) => a.c - b.c); return its.map(tok).join('　') + (e.what ? (its.length ? '\n' : '') + fmt(e.what) : ''); }
+// 食間：前の食事の食べ終わり → 次の食事の食べ始め。6時間以上8時間未満がOK
+function gapOf(prev, cur) {
+  if (!prev.end || !cur.time) return { st: 'na', m: null };
+  const m = minutes(prev.end, cur.time);
+  return { m, st: m < 360 ? 'under' : m >= 480 ? 'ng' : 'ok' };
+}
 function entriesOf(d) { return (data[d] || []).slice().sort((a, b) => a.time.localeCompare(b.time)); }
 
 function render() {
@@ -954,15 +1002,22 @@ function render() {
   $('list').innerHTML = list.length ? '' : '<p class="note">この日はまだ記録がありません。</p>';
   $('dayTools').hidden = !list.length; $('dayTools').open = false; $('moveTo').value = d; armDay(false); bkStatus();
   const isToday = d === ymd(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-  list.forEach(e => {
+  list.forEach((e, ei) => {
+    if (ei) {
+      const g = gapOf(list[ei - 1], e), gl = document.createElement('div'); gl.className = 'gapline';
+      gl.innerHTML = '食間 <b></b>'; const gb = gl.querySelector('b');
+      gb.className = g.st; gb.textContent = g.m == null ? '未入力' : hm(g.m);
+      $('list').appendChild(gl);
+    }
     const el = document.createElement('div'); el.className = 'item';
     el.innerHTML = '<img alt=""><div><b></b><span></span></div><div class="acts" style="flex-direction:column;gap:6px"><button class="ed">修正</button></div>';
     if (e.img) el.querySelector('img').src = e.img; else { const n = document.createElement('div'); n.className = 'noimg'; n.textContent = '写真なし'; el.querySelector('img').replaceWith(n); }
     const dur = minutes(e.time, e.end);
     el.querySelector('b').textContent = KL(e.kind) + ' ' + timeRange(e) + (dur != null ? '（' + dur + '分）' : '');
+    if (e.noMeat) { const t = document.createElement('span'); t.className = 'nomeat'; t.textContent = '肉なし'; el.querySelector('b').appendChild(t); }
     const has = entryHas(e);
-    el.querySelector('span').textContent = has ? entryText(e) : '食べたものを入力してください';
-    if (!has) el.querySelector('span').style.color = 'var(--acc)';
+    el.querySelector(':scope > div > span').textContent = has ? entryText(e) : '食べたものを入力してください';
+    if (!has) el.querySelector(':scope > div > span').style.color = 'var(--acc)';
     el.querySelector('.ed').textContent = has ? '修正' : '入力';
     el.querySelector('.ed').classList.toggle('todo', !has);
     el.querySelector('.ed').onclick = () => startEdit(e);
@@ -1137,11 +1192,13 @@ async function commitInner(needText) {
     else { $('what').value = ($('what').value.trim() ? $('what').value.trim() + ' ' : '') + pend; note = '\n「' + pend + '」はポーションが入っていないので、「その他」に入れました。あとで「修正」から直せます。'; }
     clearAdd();
   }
+  if (!editId && kind !== '間食' && doneOf(kind).length) { $('recMsg').textContent = KL(kind) + 'はもう記録してあります。直すときは「この' + KL(kind) + 'を修正する」から。'; return; }
   const hasFood = !!($('what').value.trim() || fItems.length);
   if (!photo && !hasFood) { $('recMsg').textContent = '写真か、食べたもののどちらかを入れてください。'; return; }
   if (needText && !hasFood) { $('recMsg').textContent = '食べたものを入れてください。あとで入れるなら「写真だけ先に保存」を押してください。'; return; }
   const d = $('date').value;
   const rec = { id: editId || Date.now(), kind, time: $('time').value, end: $('end').value || '', what: $('what').value.trim(), img: photo || '', items: fItems.map(x => ({ ...x })) };
+  if ($('noMeat').checked) rec.noMeat = true;
   const before = JSON.stringify(data[d] || []);
   const prevWhat = editId ? ((data[d] || []).find(x => x.id === editId) || {}).what : '';
   if (editId) data[d] = (data[d] || []).map(x => x.id === editId ? rec : x); else (data[d] = data[d] || []).push(rec);
@@ -1184,7 +1241,7 @@ function renderPrev() {
     b.onclick = () => {
       // 確認の画面は出さない（出ない環境があるため）。入力中のものがあれば、あとで「元に戻す」で戻せる
       const had = fItems.length || $('what').value.trim(), was = { items: fItems, what: $('what').value };
-      fItems = (e.items || []).map(x => ({ ...x })); $('what').value = e.what || '';
+      fItems = (e.items || []).map(x => ({ ...x })); $('what').value = e.what || ''; $('noMeat').checked = !!e.noMeat;
       box.hidden = true; $('prevBtn').textContent = '前回と同じ';
       renderItems(); updatePreview(); draftSoon();
       $('fMsg').textContent = '入れました。直すときは食品をタップ、消すときは×';
@@ -1213,7 +1270,7 @@ function formDirty() {
 function draftNow() {
   if (!formDirty()) return null;
   return {
-    v: 1, at: Date.now(), date: $('date').value, editId, kind, time: $('time').value, end: $('end').value, what: $('what').value, photo: photo || '',
+    v: 1, at: Date.now(), date: $('date').value, editId, kind, time: $('time').value, end: $('end').value, what: $('what').value, photo: photo || '', noMeat: $('noMeat').checked,
     items: fItems.map(x => ({ ...x })),
     add: { c: fCat, name: $('fName').value, amt: $('fAmt').value, kcal: $('fKcal').value, p: $('fP').value, fat: $('fFat').value }
   };
@@ -1257,7 +1314,7 @@ async function draftRestore() {
     kind = ['朝', '昼', '間食', '夜'].includes(d.kind) ? d.kind : kind; mark();
     if (typeof d.time === 'string' && d.time) $('time').value = d.time;
     $('end').value = typeof d.end === 'string' ? d.end : '';
-    $('what').value = typeof d.what === 'string' ? d.what : '';
+    $('what').value = typeof d.what === 'string' ? d.what : ''; $('noMeat').checked = d.noMeat === true;
     photo = typeof d.photo === 'string' && d.photo.startsWith('data:image/') ? d.photo : null;
     fItems = Array.isArray(d.items) ? d.items.filter(x => x && typeof x.name === 'string' && typeof x.p === 'number').map(x => ({ ...x })) : [];
     const a = d.add || {};
@@ -1305,7 +1362,7 @@ $('make').onclick = async () => {
   // 合計は2行：［合計］［カテ1］2.5p ／ ［カテ2］3p 脂質 12.2g（［］はアイコン）
   const totalRows = k => { const s = sums(list.filter(e => e.kind === k)); return [[[{ t: '合計', b: 'fill' }], [{ t: 'カテ1', b: 'line', col: C1 }, { t: r1(s.c1) + 'p', col: C1 }]], [[{ t: 'カテ2', b: 'line', col: C2 }, { t: r1(s.c2) + 'p', col: C2 }], [{ t: '脂質 ' + r1(s.fat) + 'g', col: C2 }]]]; };
   const totalText = k => totalRows(k).flat(2).map(x => x.t).join('');
-  try { await document.fonts.load('700 40px "Zen Maru Gothic"', dotDate(d) + list.map(e => KL(e.kind) + entryText(e) + totalText(e.kind) + timeRange(e)).join('') + '0123456789.():・〜（）／写真なし日月火水木金土' + name); } catch (e) {}
+  try { await document.fonts.load('700 40px "Zen Maru Gothic"', dotDate(d) + list.map(e => KL(e.kind) + entryText(e) + totalText(e.kind) + timeRange(e)).join('') + '0123456789.():・〜（）／写真なし日月火水木金土食間時間分OKあと空きすぎ未入力肉なし' + name); } catch (e) {}
   const W = 1080, P = 44, LX = P + 98, DX = P + 128, PX = P + 166, FW = 340, FH = 255, TH = 46, TX = PX + FW + 30, TW = W - P - TX, LH = 42, PADY = 30, TOP = 118, GAP = 10;
   const ims = await Promise.all(list.map(e => e.img ? loadImg(e.img) : null));
   const mg = document.createElement('canvas').getContext('2d'); mg.font = '700 30px ' + FF;
@@ -1337,7 +1394,8 @@ $('make').onclick = async () => {
   });
   const textH = ls => ls.reduce((a, l) => a + LH + (l.gap ? GAP : 0), 0);
   const rowH = list.map((e, i) => PADY * 2 + Math.max(TH + FH, textH(lines[i])));
-  const H = TOP + rowH.reduce((a, b) => a + b, 0) + P;
+  const GH = 58; // 食間の帯の高さ
+  const H = TOP + rowH.reduce((a, b) => a + b, 0) + GH * (list.length - 1) + P;
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d');
   const acc = 'hsl(' + hue + ' 68% 68%)', ink = 'hsl(' + hue + ' 20% 36%)', soft = 'hsl(' + hue + ' 50% 88%)';
@@ -1347,7 +1405,7 @@ $('make').onclick = async () => {
   if (name) { g.textAlign = 'right'; g.fillStyle = ink; g.font = '700 36px ' + FF; g.fillText(name, W - P, 80, 340); }
   g.fillStyle = acc; g.fillRect(P, 98, W - 2 * P, 4);
   g.textBaseline = 'middle';
-  let ry = TOP; const rowY = rowH.map(h => { const y = ry; ry += h; return y; });
+  let ry = TOP; const rowY = rowH.map(h => { const y = ry; ry += h + GH; return y; });
   // 時間は写真の上。写真の位置は行の上下中央
   const tyOf = i => rowY[i] + PADY + Math.round((rowH[i] - 2 * PADY - TH - FH) / 2), fyOf = i => tyOf(i) + TH, dotY = list.map((e, i) => tyOf(i) + 20);
   g.strokeStyle = soft; g.lineWidth = 4; g.beginPath(); g.moveTo(DX, dotY[0]); g.lineTo(DX, dotY[dotY.length - 1]); g.stroke();
@@ -1357,6 +1415,10 @@ $('make').onclick = async () => {
     g.fillStyle = acc; g.beginPath(); g.arc(DX, dotY[i], 11, 0, Math.PI * 2); g.fill();
     const tr = e.time.replace(/^0/, '') + (e.end ? '〜' + e.end.replace(/^0/, '') : '');
     g.textAlign = 'left'; g.fillStyle = 'hsl(' + hue + ' 12% 45%)'; g.font = '700 30px ' + FF; g.fillText(tr, PX + 4, dotY[i], FW);
+    if (e.noMeat) { // 肉なしの札（時間の右）
+      const tw = Math.min(g.measureText(tr).width, FW), bx = PX + 4 + tw + 14; g.font = '700 24px ' + FF; const bw = g.measureText('肉なし').width + 22;
+      rr(g, bx, dotY[i] - 17, bw, 34, 17); g.fillStyle = 'hsl(30 100% 92%)'; g.fill(); g.fillStyle = 'hsl(24 72% 42%)'; g.fillText('肉なし', bx + 11, dotY[i] + 1);
+    }
     if (im) {
       g.save(); rr(g, PX, fy, FW, FH, 14); g.clip();
       const s = Math.max(FW / im.width, FH / im.height), dw = im.width * s, dh = im.height * s;
@@ -1391,7 +1453,20 @@ $('make').onclick = async () => {
       g.fillStyle = ink; g.font = '700 30px ' + FF;
       g.fillText(l.t, TX, ty + LH / 2, TW); ty += LH;
     });
-    if (i < list.length - 1) { g.strokeStyle = '#e8dde2'; g.lineWidth = 2; g.beginPath(); g.moveTo(P, y + h); g.lineTo(W - P, y + h); g.stroke(); }
+    if (i < list.length - 1) { // 食間の帯：線の横に 時間 と OK／あと○分／空きすぎ
+      g.strokeStyle = '#efe6ea'; g.lineWidth = 2; g.beginPath(); g.moveTo(PX, y + h); g.lineTo(W - P, y + h); g.moveTo(PX, y + h + GH); g.lineTo(W - P, y + h + GH); g.stroke();
+      const gp = gapOf(e, list[i + 1]), cy = y + h + GH / 2;
+      g.textAlign = 'left'; g.font = '700 28px ' + FF; g.fillStyle = 'hsl(' + hue + ' 12% 45%)';
+      const lb = '食間 ' + (gp.m == null ? '' : hm(gp.m)); g.fillText(lb, PX + 4, cy + 1);
+      const tag = gp.st === 'na' ? '未入力' : gp.st === 'ok' ? 'OK' : gp.st === 'ng' ? '空きすぎ' : 'あと' + hm(360 - gp.m);
+      const bx = PX + 4 + (gp.m == null ? g.measureText('食間 ').width : g.measureText(lb).width + 16), bw = g.measureText(tag).width + 28;
+      rr(g, bx, cy - 19, bw, 38, 19);
+      if (gp.st === 'ok') { g.fillStyle = '#d4ede2'; g.fill(); g.fillStyle = '#25734f'; }
+      else if (gp.st === 'ng') { g.fillStyle = '#c0302b'; g.fill(); g.fillStyle = '#ffffff'; }
+      else if (gp.st === 'under') { g.strokeStyle = '#2f76b8'; g.lineWidth = 3; g.stroke(); g.fillStyle = '#2f76b8'; }
+      else { g.setLineDash([8, 6]); g.strokeStyle = '#b9a9b0'; g.lineWidth = 2; g.stroke(); g.setLineDash([]); g.fillStyle = '#8f7f86'; }
+      g.fillText(tag, bx + 14, cy + 1);
+    }
   }
   $('outImg').innerHTML = '';
   const img = new Image(); img.alt = '1日のまとめ画像'; img.src = c.toDataURL('image/jpeg', 0.85);
@@ -1466,6 +1541,7 @@ $('bkFile').onchange = async ev => {
       const its = Array.isArray(e.items) ? e.items.filter(validFood).map(x => ({ name: x.name, c: x.c, amt: typeof x.amt === 'string' ? x.amt : '', p: x.p, fat: x.c === 2 && typeof x.fat === 'number' ? x.fat : null })) : [];
       const rec = { id: e.id, kind: e.kind, time: typeof e.time === 'string' ? e.time : '', what: e.what, img };
       if (typeof e.end === 'string' && /^\d{2}:\d{2}$/.test(e.end)) rec.end = e.end;
+      if (e.noMeat === true) rec.noMeat = true;
       if (its.length) rec.items = its;
       ids.add(e.id); add.push(rec);
     });
